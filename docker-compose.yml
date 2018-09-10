@@ -10,7 +10,7 @@ services:
     networks:
       - web
   web:
-    image: civicactions/fema-grants
+    image: civicactions/va-demo
     volumes:
       - .:/app/src
     links:
