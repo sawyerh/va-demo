@@ -13,8 +13,8 @@
 Run the following:
 
 ```
-git clone https://github.com/CivicActions/fema-grants.git
-cd fema-grants
+git clone https://github.com/CivicActions/va-demo
+cd va-demo
 docker-compose up -d
 ```
 
