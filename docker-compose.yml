@@ -10,7 +10,7 @@ services:
     networks:
       - web
   web:
-    image: civicactions/va-demo
+    image: captbobalou/va-demo
     volumes:
       - .:/app/src
     links:
