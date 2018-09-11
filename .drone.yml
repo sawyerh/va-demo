@@ -11,14 +11,14 @@ pipeline:
       - timeout 300 bash -c 'until curl -m1 -s http://web > /dev/null; do sleep 0.5; done'
       - drush --root=/app/src/docroot core:status
       - /app/src/vendor/bin/behat -c /app/src/tests/bdd/behat.yml
-  gemini:
-    image: civicactions/docker-gemini:latest
-    pull: true
-    environment:
-      - NODE_NO_WARNINGS=1
-    commands:
-      - cd /app/src/tests/visual
-      - gemini test .
+#  gemini:
+#    image: civicactions/docker-gemini:latest
+#    pull: true
+#    environment:
+#      - NODE_NO_WARNINGS=1
+#    commands:
+#      - cd /app/src/tests/visual
+#      - gemini test .
   pa11y:
     image: civicactions/docker-pa11y:latest
     pull: true
