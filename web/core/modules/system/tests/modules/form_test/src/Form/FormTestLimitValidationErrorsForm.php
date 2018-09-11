@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Builds a simple form with a button triggering partial validation.
- *
- * @internal
  */
 class FormTestLimitValidationErrorsForm extends FormBase {
 
@@ -104,7 +102,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
     // The title has not been validated, thus its value - in case of the test case
     // an empty string - may not be set.
     if (!$form_state->hasValue('title') && $form_state->hasValue('test')) {
-      $this->messenger()->addStatus('Only validated values appear in the form values.');
+      drupal_set_message('Only validated values appear in the form values.');
     }
   }
 

@@ -6,5 +6,5 @@ package: Multilingual
 version: VERSION
 core: 8.x
 dependencies:
-  - drupal:language
-  - drupal:file
+  - language
+  - file

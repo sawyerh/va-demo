@@ -4,6 +4,7 @@ namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\ToStringTrait;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Provides translatable markup class.
@@ -21,6 +22,13 @@ use Drupal\Component\Utility\ToStringTrait;
 class TranslatableMarkup extends FormattableMarkup {
 
   use ToStringTrait;
+
+  /**
+   * The string to be translated.
+   *
+   * @var string
+   */
+  protected $string;
 
   /**
    * The translated markup without placeholder replacements.
@@ -131,7 +139,8 @@ class TranslatableMarkup extends FormattableMarkup {
       $message = $string instanceof TranslatableMarkup ? '$string ("' . $string->getUntranslatedString() . '") must be a string.' : '$string ("' . (string) $string . '") must be a string.';
       throw new \InvalidArgumentException($message);
     }
-    parent::__construct($string, $arguments);
+    $this->string = $string;
+    $this->arguments = $arguments;
     $this->options = $options;
     $this->stringTranslation = $string_translation;
   }
@@ -225,7 +234,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *   The length of the string.
    */
   public function count() {
-    return mb_strlen($this->render());
+    return Unicode::strlen($this->render());
   }
 
 }

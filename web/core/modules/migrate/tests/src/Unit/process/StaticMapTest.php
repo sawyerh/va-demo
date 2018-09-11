@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\Component\Utility\Variable;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
@@ -28,7 +27,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   public function testMapWithSourceString() {
     $value = $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame(['bar' => 'baz'], $value);
+    $this->assertSame($value, ['bar' => 'baz']);
   }
 
   /**
@@ -36,7 +35,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    */
   public function testMapWithSourceList() {
     $value = $this->plugin->transform(['foo', 'bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame('baz', $value);
+    $this->assertSame($value, 'baz');
   }
 
   /**
@@ -51,7 +50,7 @@ class StaticMapTest extends MigrateProcessTestCase {
    * Tests when the source is invalid.
    */
   public function testMapwithInvalidSource() {
-    $this->setExpectedException(MigrateSkipRowException::class, sprintf("No static mapping found for '%s' and no default value provided for destination '%s'.", Variable::export(['bar']), 'destinationproperty'));
+    $this->setExpectedException(MigrateSkipRowException::class);
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
   }
 
@@ -63,7 +62,7 @@ class StaticMapTest extends MigrateProcessTestCase {
     $configuration['default_value'] = 'test';
     $this->plugin = new StaticMap($configuration, 'map', []);
     $value = $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destinationproperty');
-    $this->assertSame('test', $value);
+    $this->assertSame($value, 'test');
   }
 
   /**

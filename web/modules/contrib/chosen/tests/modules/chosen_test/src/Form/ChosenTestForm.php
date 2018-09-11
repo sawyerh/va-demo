@@ -24,15 +24,15 @@ class ChosenTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['select'] = [
+    $form['select'] = array(
       '#type' => 'select',
       '#required' => FALSE,
       '#title' => $this->t('Select'),
       '#default_value' => '',
       '#empty_option' => $this->t('- Select -'),
-      '#options' => ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+      '#options' => array('Option 1', 'Option 2', 'Option 3', 'Option 4'),
       '#chosen' => 1,
-    ];
+    );
 
     return $form;
   }

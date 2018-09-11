@@ -19,8 +19,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
  * elements, with values of 'user' and 'image', respectively.
  *
  * @MigrateSource(
- *   id = "empty",
- *   source_module = "migrate"
+ *   id = "empty"
  * )
  */
 class EmptySource extends SourcePluginBase {
@@ -59,7 +58,7 @@ class EmptySource extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  public function count() {
     return 1;
   }
 

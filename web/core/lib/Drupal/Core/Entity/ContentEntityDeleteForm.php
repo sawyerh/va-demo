@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Provides a generic base class for a content entity deletion form.
  *
- * @internal
- *
  * @todo Re-evaluate and streamline the entity deletion form class hierarchy in
  *   https://www.drupal.org/node/2491057.
  */
@@ -39,7 +37,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
         $form['deleted_translations'] = [
           '#theme' => 'item_list',
           '#title' => $this->t('The following @entity-type translations will be deleted:', [
-            '@entity-type' => $entity->getEntityType()->getLowercaseLabel(),
+            '@entity-type' => $entity->getEntityType()->getLowercaseLabel()
           ]),
           '#items' => $languages,
         ];
@@ -73,7 +71,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
       $form_state->setRedirectUrl($this->getRedirectUrl());
     }
 
-    $this->messenger()->addStatus($this->getDeletionMessage());
+    drupal_set_message($this->getDeletionMessage());
     $this->logDeletionMessage();
   }
 

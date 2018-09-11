@@ -6,9 +6,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\views\query\DateSqlInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Drupal\views\ResultRow;
@@ -31,10 +29,8 @@ class SqlTest extends UnitTestCase {
   public function testGetCacheTags() {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -79,10 +75,8 @@ class SqlTest extends UnitTestCase {
   public function testGetCacheMaxAge() {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $view->result = [];
@@ -255,10 +249,8 @@ class SqlTest extends UnitTestCase {
     $view->storage = $view_entity->reveal();
 
     $entity_type_manager = $this->setupEntityTypes();
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -285,10 +277,8 @@ class SqlTest extends UnitTestCase {
       ],
     ];
     $entity_type_manager = $this->setupEntityTypes($entities);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -350,10 +340,8 @@ class SqlTest extends UnitTestCase {
       ],
     ];
     $entity_type_manager = $this->setupEntityTypes($entities);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -406,10 +394,8 @@ class SqlTest extends UnitTestCase {
       ],
     ];
     $entity_type_manager = $this->setupEntityTypes($entities);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -458,10 +444,8 @@ class SqlTest extends UnitTestCase {
       ],
     ];
     $entity_type_manager = $this->setupEntityTypes([], $entity_revisions);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -513,10 +497,8 @@ class SqlTest extends UnitTestCase {
       ],
     ];
     $entity_type_manager = $this->setupEntityTypes($entity, $entity_revisions);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];
@@ -572,10 +554,8 @@ class SqlTest extends UnitTestCase {
       ],
     ];
     $entity_type_manager = $this->setupEntityTypes($entities, $entity_revisions);
-    $date_sql = $this->prophesize(DateSqlInterface::class);
-    $messenger = $this->prophesize(MessengerInterface::class);
 
-    $query = new Sql([], 'sql', [], $entity_type_manager->reveal(), $date_sql->reveal(), $messenger->reveal());
+    $query = new Sql([], 'sql', [], $entity_type_manager->reveal());
     $query->view = $view;
 
     $result = [];

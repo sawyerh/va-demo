@@ -43,8 +43,6 @@ class ConfigLocator
 
     protected $configFilePaths = [];
 
-    protected $configFileVariant;
-
     protected $processedConfigPaths = [];
 
     /*
@@ -92,9 +90,8 @@ class ConfigLocator
     /**
      * ConfigLocator constructor
      */
-    public function __construct($envPrefix = '', $configFileVariant = '')
+    public function __construct($envPrefix = '')
     {
-        $this->configFileVariant = $configFileVariant;
         $this->config = new DrushConfig();
 
         // Add placeholders to establish priority. We add
@@ -299,17 +296,13 @@ class ConfigLocator
         // Make all of the config values parsed so far available in evaluations.
         $reference = $this->config()->export();
         $processor = new ConfigProcessor();
-        $processor->useMergeStrategyForKeys(['drush.paths.include', 'drush.paths.alias-path']);
         $context = $this->config->getContext($contextName);
         $processor->add($context->export());
 
         $candidates = [
             'drush.yml',
+            'config/drush.yml',
         ];
-        if ($this->configFileVariant) {
-            $candidates[] = "drush{$this->configFileVariant}.yml";
-        }
-        $candidates = $this->expandCandidates($candidates, 'config/');
         $config_files = $this->findConfigFiles($paths, $candidates);
         $this->addConfigFiles($processor, $loader, $config_files);
 
@@ -474,9 +467,9 @@ class ConfigLocator
 
         // Find projects
         $finder = new Finder();
-        $finder->directories()
+        $finder->files()
             ->ignoreUnreadableDirs()
-            ->path('#^src/Commands$|^Commands$#')
+            ->path('#composer.json$|^src/Commands|^Commands#')
             ->in($directories)
             ->depth('<= 3');
 
@@ -495,20 +488,6 @@ class ConfigLocator
     public function setComposerRoot($selectedComposerRoot)
     {
         $this->composerRoot = $selectedComposerRoot;
-    }
-
-    /**
-     * Double the candidates, adding '$prefix' before each existing one.
-     */
-    public function expandCandidates($candidates, $prefix)
-    {
-        $additional = array_map(
-            function ($item) use ($prefix) {
-                return $prefix . $item;
-            },
-            $candidates
-        );
-        return array_merge($candidates, $additional);
     }
 
     /**

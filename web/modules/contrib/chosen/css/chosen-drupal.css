@@ -32,9 +32,3 @@
 .filter-wrapper {
   overflow: visible !important;
 }
-
-.filter-wrapper:after {
-  content: "";
-  display: block;
-  clear: both;
-}

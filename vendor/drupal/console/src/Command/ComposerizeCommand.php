@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Core\Command\ContainerAwareCommand;
+use Symfony\Component\Yaml\Yaml;
 use Drupal\Component\Serialization\Json;
 
 /**
@@ -76,7 +77,8 @@ class ComposerizeCommand extends ContainerAwareCommand
         $includeVersion = $input->getOption('include-version');
         $showPackages = $input->getOption('show-packages')?:false;
 
-        $this->drupalFinder = $this->get('console.drupal_finder');
+        $this->drupalFinder = new DrupalFinder();
+        $this->drupalFinder->locateRoot(getcwd());
 
         $this->extensionManager = $this->get('console.extension_manager');
         $this->extractCorePackages();
@@ -120,7 +122,7 @@ class ComposerizeCommand extends ContainerAwareCommand
             }
         }
         $this->getIo()->comment($this->trans('commands.composerize.messages.from'));
-        $this->getIo()->simple($this->drupalFinder->getComposerRoot());
+        $this->getIo()->simple($this->get('console.root'));
         $this->getIo()->newLine();
         $this->getIo()->comment($this->trans('commands.composerize.messages.execute'));
         $this->getIo()->simple($composerCommand);

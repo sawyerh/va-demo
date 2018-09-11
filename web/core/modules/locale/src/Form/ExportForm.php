@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Form for the Gettext translation files export form.
- *
- * @internal
  */
 class ExportForm extends FormBase {
 
@@ -180,7 +178,7 @@ class ExportForm extends FormBase {
       $form_state->setResponse($response);
     }
     else {
-      $this->messenger()->addStatus($this->t('Nothing to export.'));
+      drupal_set_message($this->t('Nothing to export.'));
     }
   }
 

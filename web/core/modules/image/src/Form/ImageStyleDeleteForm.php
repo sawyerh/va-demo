@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Creates a form to delete an image style.
- *
- * @internal
  */
 class ImageStyleDeleteForm extends EntityDeleteForm {
 
@@ -25,7 +23,6 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
   public function getQuestion() {
     return $this->t('Optionally select a style before deleting %style', ['%style' => $this->entity->label()]);
   }
-
   /**
    * {@inheritdoc}
    */

@@ -11,14 +11,20 @@
 
 namespace Symfony\Bridge\PhpUnit\TextUI;
 
-if (class_exists('PHPUnit_Runner_Version') && version_compare(\PHPUnit_Runner_Version::id(), '6.0.0', '<')) {
-    class_alias('Symfony\Bridge\PhpUnit\Legacy\CommandForV5', 'Symfony\Bridge\PhpUnit\TextUI\Command');
-} else {
-    class_alias('Symfony\Bridge\PhpUnit\Legacy\CommandForV6', 'Symfony\Bridge\PhpUnit\TextUI\Command');
+if (!class_exists('PHPUnit_TextUI_Command')) {
+    return;
 }
 
-if (false) {
-    class Command
+/**
+ * {@inheritdoc}
+ */
+class Command extends \PHPUnit_TextUI_Command
+{
+    /**
+     * {@inheritdoc}
+     */
+    protected function createRunner()
     {
+        return new TestRunner($this->arguments['loader']);
     }
 }

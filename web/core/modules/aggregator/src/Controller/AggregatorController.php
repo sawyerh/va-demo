@@ -44,8 +44,7 @@ class AggregatorController extends ControllerBase {
    * Presents the aggregator feed creation form.
    *
    * @return array
-   *   A form array as expected by
-   *   \Drupal\Core\Render\RendererInterface::render().
+   *   A form array as expected by drupal_render().
    */
   public function feedAdd() {
     $feed = $this->entityManager()->getStorage('aggregator_feed')->create();
@@ -94,7 +93,7 @@ class AggregatorController extends ControllerBase {
     $message = $aggregator_feed->refreshItems()
       ? $this->t('There is new syndicated content from %site.', ['%site' => $aggregator_feed->label()])
       : $this->t('There is no new syndicated content from %site.', ['%site' => $aggregator_feed->label()]);
-    $this->messenger()->addStatus($message);
+    drupal_set_message($message);
     return $this->redirect('aggregator.admin_overview');
   }
 
@@ -102,8 +101,7 @@ class AggregatorController extends ControllerBase {
    * Displays the aggregator administration page.
    *
    * @return array
-   *   A render array as expected by
-   *   \Drupal\Core\Render\RendererInterface::render().
+   *   A render array as expected by drupal_render().
    */
   public function adminOverview() {
     $entity_manager = $this->entityManager();

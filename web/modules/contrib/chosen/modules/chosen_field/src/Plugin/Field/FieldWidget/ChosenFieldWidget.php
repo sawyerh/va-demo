@@ -29,9 +29,9 @@ class ChosenFieldWidget extends OptionsSelectWidget {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
-    $element += [
+    $element += array(
       '#chosen' => 1,
-    ];
+    );
 
     return $element;
   }

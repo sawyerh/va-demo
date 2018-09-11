@@ -137,7 +137,7 @@ class TermsCommand extends Command
             $vocabularies = array_keys($this->drupalApi->getVocabularies());
         }
 
-        $result = $this->createTermData->create(
+        $terms = $this->createTermData->create(
             $vocabularies,
             $limit,
             $nameWords
@@ -149,27 +149,14 @@ class TermsCommand extends Command
             $this->trans('commands.create.terms.messages.name'),
         ];
 
-        if ($result['success']) {
-            $this->getIo()->table($tableHeader, $result['success']);
+        $this->getIo()->table($tableHeader, $terms['success']);
 
-            $this->getIo()->success(
-                sprintf(
-                    $this->trans('commands.create.terms.messages.created-terms'),
-                    count($result['success'])
-                )
-            );
-        }
-
-        if (isset($result['error'])) {
-            foreach ($result['error'] as $error) {
-                $this->getIo()->error(
-                    sprintf(
-                        $this->trans('commands.create.terms.messages.error'),
-                        $error
-                    )
-                );
-            }
-        }
+        $this->getIo()->success(
+            sprintf(
+                $this->trans('commands.create.terms.messages.created-terms'),
+                $limit
+            )
+        );
 
         return 0;
     }

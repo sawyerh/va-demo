@@ -8,8 +8,6 @@ use Drupal\Core\Url;
 
 /**
  * Builds the form to delete Workflow entities.
- *
- * @internal
  */
 class WorkflowDeleteForm extends EntityConfirmFormBase {
 
@@ -53,7 +51,7 @@ class WorkflowDeleteForm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
 
-    $this->messenger()->addStatus($this->t(
+    drupal_set_message($this->t(
       'Workflow %label deleted.',
       ['%label' => $this->entity->label()]
     ));

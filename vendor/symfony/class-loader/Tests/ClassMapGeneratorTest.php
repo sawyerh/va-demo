@@ -14,9 +14,6 @@ namespace Symfony\Component\ClassLoader\Tests;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 
-/**
- * @group legacy
- */
 class ClassMapGeneratorTest extends TestCase
 {
     /**
@@ -138,7 +135,7 @@ class ClassMapGeneratorTest extends TestCase
         ), ClassMapGenerator::createMap($finder));
     }
 
-    protected function assertEqualsNormalized($expected, $actual, $message = '')
+    protected function assertEqualsNormalized($expected, $actual, $message = null)
     {
         foreach ($expected as $ns => $path) {
             $expected[$ns] = str_replace('\\', '/', $path);

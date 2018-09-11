@@ -109,7 +109,6 @@ class UserCase extends CommandUnishTestCase
             'entity_type_id' => 'unish_article',
             'entity_base_path' => 'admin/content/unish_article',
             'fieldable' => 'no',
-            'translatable' => 'no',
             'revisionable' => 'no',
             'template' => 'no',
             'access_controller' => 'no',

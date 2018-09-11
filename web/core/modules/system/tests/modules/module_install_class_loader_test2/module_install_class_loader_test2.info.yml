@@ -5,4 +5,4 @@ package: Testing
 core: 8.x
 version: VERSION
 dependencies:
-  - drupal:module_install_class_loader_test1
+  - module_install_class_loader_test1

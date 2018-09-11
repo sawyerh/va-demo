@@ -4,4 +4,4 @@ package: 'Testing'
 version: VERSION
 core: 8.x
 dependencies:
-  - drupal:config_test
+  - config_test

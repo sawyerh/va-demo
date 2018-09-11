@@ -157,14 +157,12 @@ class TextDescriptor extends Descriptor
             (strpos($command->getName(), ':')?:0)
         );
         $commandData = $command->getApplication()->getData();
+        $commands = $commandData['commands'][$namespace];
         $examples = [];
-        if (array_key_exists($namespace, $commandData['commands'])) {
-            $commands = $commandData['commands'][$namespace];
-            foreach ($commands as $item) {
-                if ($item['name'] == $command->getName()) {
-                    $examples = $item['examples'];
-                    break;
-                }
+        foreach ($commands as $item) {
+            if ($item['name'] ==  $command->getName()) {
+                $examples = $item['examples'];
+                break;
             }
         }
 

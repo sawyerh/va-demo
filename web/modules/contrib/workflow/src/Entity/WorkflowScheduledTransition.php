@@ -47,7 +47,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 class WorkflowScheduledTransition extends WorkflowTransition {
 
   /**
-   * @inheritdoc.
+   * Constructor.
    */
   public function __construct(array $values = [], $entityType = 'workflow_scheduled_transition', $bundle = FALSE, $translations = []) {
     // Please be aware that $entity_type and $entityType are different things!
@@ -70,7 +70,7 @@ class WorkflowScheduledTransition extends WorkflowTransition {
    * {@inheritdoc}
    *
    * This is a hack to avoid the following error, because ScheduledTransition is not a bundle of Workflow:
-   *   Drupal\Component\Plugin\Exception\PluginNotFoundException: The "entity:workflow_scheduled_transition:first" plugin does not exist. in Drupal\Core\Plugin\DefaultPluginManager->doGetDefinition() (line 60 of core\lib\Drupal\Component\Plugin\Discovery\DiscoveryTrait.php).
+   *   Drupal\Component\Plugin\Exception\PluginNotFoundException: The "entity:workflow_scheduled_transition:eerste" plugin does not exist. in Drupal\Core\Plugin\DefaultPluginManager->doGetDefinition() (line 60 of core\lib\Drupal\Component\Plugin\Discovery\DiscoveryTrait.php).
    */
   function validate() {
     // Since this function generates an error in one use case (using WorkflowTransitionForm)
@@ -176,13 +176,11 @@ class WorkflowScheduledTransition extends WorkflowTransition {
    *
    * @param int $start
    * @param int $end
-   * @param string $from_sid
-   * @param string $to_sid
    *
    * @return WorkflowScheduledTransition[]
    *   An array of transitions.
    */
-  public static function loadBetween($start = 0, $end = 0, $from_sid = '', $to_sid = '') {
+  public static function loadBetween($start = 0, $end = 0) {
     $transition_type = 'workflow_scheduled_transition'; // @todo: get this from annotation.
 
     /* @var $query \Drupal\Core\Entity\Query\QueryInterface */
@@ -194,12 +192,6 @@ class WorkflowScheduledTransition extends WorkflowTransition {
     }
     if ($end) {
       $query->condition('timestamp', $end, '<');
-    }
-    if ($from_sid) {
-      $query->condition('from_sid', $from_sid, '=');
-    }
-    if ($to_sid) {
-      $query->condition('to_sid', $from_sid, '=');
     }
 
     $ids = $query->execute();
@@ -241,8 +233,7 @@ class WorkflowScheduledTransition extends WorkflowTransition {
     $fields['timestamp'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Scheduled'))
       ->setDescription(t('The date+time this transition is scheduled for.'))
-//      ->setQueryable(FALSE)
-//      ->setCustomStorage(FALSE)
+      ->setQueryable(FALSE)
 //      ->setTranslatable(TRUE)
 //      ->setDisplayOptions('view', array(
 //        'label' => 'hidden',

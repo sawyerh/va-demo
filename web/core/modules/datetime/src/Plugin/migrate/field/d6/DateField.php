@@ -16,9 +16,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *     "datestamp" =  "timestamp",
  *     "datetime" =  "datetime",
  *   },
- *   core = {6},
- *   source_module = "date",
- *   destination_module = "datetime"
+ *   core = {6}
  * )
  *
  * @deprecated in Drupal 8.4.x, to be removed before Drupal 9.0.x. Use
@@ -40,7 +38,7 @@ class DateField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
+  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     switch ($data['type']) {
       case 'date':
         $from_format = 'Y-m-d\TH:i:s';

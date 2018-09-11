@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 
 /**
@@ -29,7 +30,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
    */
   protected $permissions = [
     'administer blocks',
-    'administer block_content display',
+    'administer block_content display'
   ];
 
   /**
@@ -55,16 +56,14 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
-      '%name' => $edit['info[0][value]'],
+      '%name' => $edit['info[0][value]']
     ]), 'Basic block created.');
 
     // Check that the view mode setting is hidden because only one exists.
     $this->assertNoFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting hidden because only one exists');
 
     // Check that the block exists in the database.
-    $blocks = \Drupal::entityTypeManager()
-      ->getStorage('block_content')
-      ->loadByProperties(['info' => $edit['info[0][value]']]);
+    $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertTrue($block, 'Custom Block found in database.');
 
@@ -74,7 +73,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('A custom block with block description %value already exists.', [
-      '%value' => $edit['info[0][value]'],
+      '%value' => $edit['info[0][value]']
     ]));
     $this->assertResponse(200);
   }
@@ -104,7 +103,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('@block %name has been created.', [
       '@block' => 'basic',
-      '%name' => $edit['info[0][value]'],
+      '%name' => $edit['info[0][value]']
     ]), 'Basic block created.');
 
     // Save our block permanently
@@ -144,9 +143,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertFieldByXPath('//select[@name="settings[view_mode]"]/option[@selected="selected"]', 'test_view_mode', 'View mode changed to Test View Mode');
 
     // Check that the block exists in the database.
-    $blocks = \Drupal::entityTypeManager()
-      ->getStorage('block_content')
-      ->loadByProperties(['info' => $edit['info[0][value]']]);
+    $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertTrue($block, 'Custom Block found in database.');
 
@@ -156,7 +153,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('A custom block with block description %value already exists.', [
-      '%value' => $edit['info[0][value]'],
+      '%value' => $edit['info[0][value]']
     ]));
     $this->assertResponse(200);
   }
@@ -181,9 +178,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ]), 'Basic block created.');
 
     // Check that the block exists in the database.
-    $blocks = \Drupal::entityTypeManager()
-      ->getStorage('block_content')
-      ->loadByProperties(['info' => $edit['info[0][value]']]);
+    $blocks = entity_load_multiple_by_properties('block_content', ['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertTrue($block, 'Default Custom Block found in database.');
   }
@@ -238,7 +233,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Place the block.
     $instance = [
-      'id' => mb_strtolower($edit['info[0][value]']),
+      'id' => Unicode::strtolower($edit['info[0][value]']),
       'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
     ];
@@ -290,7 +285,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   public function testConfigDependencies() {
     $block = $this->createBlockContent();
     // Place the block.
-    $block_placement_id = mb_strtolower($block->label());
+    $block_placement_id = Unicode::strtolower($block->label());
     $instance = [
       'id' => $block_placement_id,
       'settings[label]' => $block->label(),

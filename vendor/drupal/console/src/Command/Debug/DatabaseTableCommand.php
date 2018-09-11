@@ -31,13 +31,21 @@ class DatabaseTableCommand extends Command
     protected $database;
 
     /**
+     * @var R
+     */
+    protected $redBean;
+
+    /**
      * DatabaseTableCommand constructor.
      *
+     * @param R          $redBean
      * @param Connection $database
      */
     public function __construct(
+        R $redBean,
         Connection $database
     ) {
+        $this->redBean = $redBean;
         $this->database = $database;
         parent::__construct();
     }
@@ -74,12 +82,12 @@ class DatabaseTableCommand extends Command
     {
         $database = $input->getOption('database');
         $table = $input->getArgument('table');
+
         $databaseConnection = $this->resolveConnection($database);
+
         if ($table) {
-            $result = $this->database
-                ->query('DESCRIBE '. $table .';')
-                ->fetchAll();
-            if (!$result) {
+            $this->redBean = $this->getRedBeanConnection($database);
+            if (empty($this->redBean)) {
                 throw new \Exception(
                     sprintf(
                         $this->trans('commands.debug.database.table.messages.no-connection'),
@@ -87,17 +95,17 @@ class DatabaseTableCommand extends Command
                     )
                 );
             }
+            $tableInfo = $this->redBean->inspect($table);
 
             $tableHeader = [
                 $this->trans('commands.debug.database.table.messages.column'),
                 $this->trans('commands.debug.database.table.messages.type')
             ];
             $tableRows = [];
-            foreach ($result as $record) {
-                $column = json_decode(json_encode($record), true);
+            foreach ($tableInfo as $column => $type) {
                 $tableRows[] = [
-                    'column' => $column['Field'],
-                    'type' => $column['Type'],
+                    'column' => $column,
+                    'type' => $type
                 ];
             }
 

@@ -6,8 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for adding a search page.
- *
- * @internal
  */
 class SearchPageAddForm extends SearchPageFormBase {
 
@@ -41,7 +39,7 @@ class SearchPageAddForm extends SearchPageFormBase {
 
     parent::save($form, $form_state);
 
-    $this->messenger()->addStatus($this->t('The %label search page has been added.', ['%label' => $this->entity->label()]));
+    drupal_set_message($this->t('The %label search page has been added.', ['%label' => $this->entity->label()]));
   }
 
 }

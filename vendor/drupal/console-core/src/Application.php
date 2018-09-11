@@ -461,12 +461,6 @@ class Application extends BaseApplication
                 );
             }
 
-            if (method_exists($command, 'setDrupalFinder')) {
-                $command->setDrupalFinder(
-                    $this->container->get('console.drupal_finder')
-                );
-            }
-
             if (array_key_exists($command->getName(), $aliases)) {
                 $commandAliases = $aliases[$command->getName()];
                 if (!is_array($commandAliases)) {
@@ -507,7 +501,6 @@ class Application extends BaseApplication
             if (!$generator) {
                 continue;
             }
-
             if (method_exists($generator, 'setRenderer')) {
                 $generator->setRenderer(
                     $this->container->get('console.renderer')

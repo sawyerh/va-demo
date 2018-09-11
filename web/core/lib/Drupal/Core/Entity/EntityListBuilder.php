@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Messenger\MessengerTrait;
-use Drupal\Core\Routing\RedirectDestinationTrait;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -13,9 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup entity_api
  */
 class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderInterface, EntityHandlerInterface {
-
-  use MessengerTrait;
-  use RedirectDestinationTrait;
 
   /**
    * The entity storage class.
@@ -149,14 +143,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       $operations['edit'] = [
         'title' => $this->t('Edit'),
         'weight' => 10,
-        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+        'url' => $entity->urlInfo('edit-form'),
       ];
     }
     if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
       $operations['delete'] = [
         'title' => $this->t('Delete'),
         'weight' => 100,
-        'url' => $this->ensureDestination($entity->toUrl('delete-form')),
+        'url' => $entity->urlInfo('delete-form'),
       ];
     }
 
@@ -225,7 +219,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       '#header' => $this->buildHeader(),
       '#title' => $this->getTitle(),
       '#rows' => [],
-      '#empty' => $this->t('There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
+      '#empty' => $this->t('There is no @label yet.', ['@label' => $this->entityType->getLabel()]),
       '#cache' => [
         'contexts' => $this->entityType->getListCacheContexts(),
         'tags' => $this->entityType->getListCacheTags(),
@@ -251,19 +245,6 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    */
   protected function getTitle() {
     return;
-  }
-
-  /**
-   * Ensures that a destination is present on the given URL.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The URL object to which the destination should be added.
-   *
-   * @return \Drupal\Core\Url
-   *   The updated URL object.
-   */
-  protected function ensureDestination(Url $url) {
-    return $url->mergeOptions(['query' => $this->getRedirectDestination()->getAsArray()]);
   }
 
 }

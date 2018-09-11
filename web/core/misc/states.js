@@ -6,42 +6,27 @@
 **/
 
 (function ($, Drupal) {
-  var states = {
+  var states = Drupal.states = {
     postponed: []
   };
-
-  Drupal.states = states;
-
-  function invert(a, invertState) {
-    return invertState && typeof a !== 'undefined' ? !a : a;
-  }
-
-  function _compare2(a, b) {
-    if (a === b) {
-      return typeof a === 'undefined' ? a : true;
-    }
-
-    return typeof a === 'undefined' || typeof b === 'undefined';
-  }
 
   Drupal.behaviors.states = {
     attach: function attach(context, settings) {
       var $states = $(context).find('[data-drupal-states]');
+      var config = void 0;
+      var state = void 0;
       var il = $states.length;
-
-      var _loop = function _loop(i) {
-        var config = JSON.parse($states[i].getAttribute('data-drupal-states'));
-        Object.keys(config || {}).forEach(function (state) {
-          new states.Dependent({
-            element: $($states[i]),
-            state: states.State.sanitize(state),
-            constraints: config[state]
-          });
-        });
-      };
-
       for (var i = 0; i < il; i++) {
-        _loop(i);
+        config = JSON.parse($states[i].getAttribute('data-drupal-states'));
+        for (state in config) {
+          if (config.hasOwnProperty(state)) {
+            new states.Dependent({
+              element: $($states[i]),
+              state: states.State.sanitize(state),
+              constraints: config[state]
+            });
+          }
+        }
       }
 
       while (states.postponed.length) {
@@ -51,14 +36,14 @@
   };
 
   states.Dependent = function (args) {
-    var _this = this;
-
     $.extend(this, { values: {}, oldValue: null }, args);
 
     this.dependees = this.getDependees();
-    Object.keys(this.dependees || {}).forEach(function (selector) {
-      _this.initializeDependee(selector, _this.dependees[selector]);
-    });
+    for (var selector in this.dependees) {
+      if (this.dependees.hasOwnProperty(selector)) {
+        this.initializeDependee(selector, this.dependees[selector]);
+      }
+    }
   };
 
   states.Dependent.comparisons = {
@@ -75,27 +60,32 @@
 
   states.Dependent.prototype = {
     initializeDependee: function initializeDependee(selector, dependeeStates) {
-      var _this2 = this;
+      var state = void 0;
+      var self = this;
+
+      function stateEventHandler(e) {
+        self.update(e.data.selector, e.data.state, e.value);
+      }
 
       this.values[selector] = {};
 
-      Object.keys(dependeeStates).forEach(function (i) {
-        var state = dependeeStates[i];
+      for (var i in dependeeStates) {
+        if (dependeeStates.hasOwnProperty(i)) {
+          state = dependeeStates[i];
 
-        if ($.inArray(state, dependeeStates) === -1) {
-          return;
+          if ($.inArray(state, dependeeStates) === -1) {
+            continue;
+          }
+
+          state = states.State.sanitize(state);
+
+          this.values[selector][state.name] = null;
+
+          $(selector).on('state:' + state, { selector: selector, state: state }, stateEventHandler);
+
+          new states.Trigger({ selector: selector, state: state });
         }
-
-        state = states.State.sanitize(state);
-
-        _this2.values[selector][state.name] = null;
-
-        $(selector).on('state:' + state, { selector: selector, state: state }, function (e) {
-          _this2.update(e.data.selector, e.data.state, e.value);
-        });
-
-        new states.Trigger({ selector: selector, state: state });
-      });
+      }
     },
     compare: function compare(reference, selector, state) {
       var value = this.values[selector][state.name];
@@ -119,16 +109,10 @@
 
         value = invert(value, this.state.invert);
 
-        this.element.trigger({
-          type: 'state:' + this.state,
-          value: value,
-          trigger: true
-        });
+        this.element.trigger({ type: 'state:' + this.state, value: value, trigger: true });
       }
     },
     verifyConstraints: function verifyConstraints(constraints, selector) {
-      var _this3 = this;
-
       var result = void 0;
       if ($.isArray(constraints)) {
         var hasXor = $.inArray('xor', constraints) === -1;
@@ -144,11 +128,15 @@
           }
         }
       } else if ($.isPlainObject(constraints)) {
-          result = Object.keys(constraints).every(function (constraint) {
-            var check = _this3.checkConstraints(constraints[constraint], selector, constraint);
+          for (var n in constraints) {
+            if (constraints.hasOwnProperty(n)) {
+              result = ternary(result, this.checkConstraints(constraints[n], selector, n));
 
-            return typeof check === 'undefined' ? true : check;
-          });
+              if (result === false) {
+                return false;
+              }
+            }
+          }
         }
       return result;
     },
@@ -197,16 +185,16 @@
 
   states.Trigger.prototype = {
     initialize: function initialize() {
-      var _this4 = this;
-
       var trigger = states.Trigger.states[this.state];
 
       if (typeof trigger === 'function') {
         trigger.call(window, this.element);
       } else {
-        Object.keys(trigger || {}).forEach(function (event) {
-          _this4.defaultTrigger(event, trigger[event]);
-        });
+        for (var event in trigger) {
+          if (trigger.hasOwnProperty(event)) {
+            this.defaultTrigger(event, trigger[event]);
+          }
+        }
       }
 
       this.element.data('trigger:' + this.state, true);
@@ -218,21 +206,13 @@
         var value = valueFn.call(this.element, e);
 
         if (oldValue !== value) {
-          this.element.trigger({
-            type: 'state:' + this.state,
-            value: value,
-            oldValue: oldValue
-          });
+          this.element.trigger({ type: 'state:' + this.state, value: value, oldValue: oldValue });
           oldValue = value;
         }
       }, this));
 
       states.postponed.push($.proxy(function () {
-        this.element.trigger({
-          type: 'state:' + this.state,
-          value: oldValue,
-          oldValue: null
-        });
+        this.element.trigger({ type: 'state:' + this.state, value: oldValue, oldValue: null });
       }, this));
     }
   };
@@ -279,8 +259,7 @@
   };
 
   states.State = function (state) {
-    this.pristine = state;
-    this.name = state;
+    this.pristine = this.name = state;
 
     var process = true;
     do {
@@ -369,4 +348,26 @@
       }
     }
   });
+
+  function ternary(a, b) {
+    if (typeof a === 'undefined') {
+      return b;
+    } else if (typeof b === 'undefined') {
+      return a;
+    }
+
+    return a && b;
+  }
+
+  function invert(a, invertState) {
+    return invertState && typeof a !== 'undefined' ? !a : a;
+  }
+
+  function _compare2(a, b) {
+    if (a === b) {
+      return typeof a === 'undefined' ? a : true;
+    }
+
+    return typeof a === 'undefined' || typeof b === 'undefined';
+  }
 })(jQuery, Drupal);

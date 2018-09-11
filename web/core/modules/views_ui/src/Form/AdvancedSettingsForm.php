@@ -8,8 +8,6 @@ use Drupal\views\Views;
 
 /**
  * Form builder for the advanced admin settings page.
- *
- * @internal
  */
 class AdvancedSettingsForm extends ConfigFormBase {
 
@@ -78,7 +76,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
         '#default_value' => array_filter($config->get('display_extenders')),
         '#options' => $options,
         '#type' => 'checkboxes',
-        '#description' => $this->t('Select extensions of the views interface.'),
+        '#description' => $this->t('Select extensions of the views interface.')
       ];
     }
 
@@ -103,7 +101,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
    */
   public function cacheSubmit() {
     views_invalidate_cache();
-    $this->messenger()->addStatus($this->t('The cache has been cleared.'));
+    drupal_set_message($this->t('The cache has been cleared.'));
   }
 
 }

@@ -15,7 +15,6 @@ use Webmozart\PathUtil\Path;
 
 class CliCommands extends DrushCommands
 {
-
     /**
      * Drush's PHP Shell.
      *
@@ -95,13 +94,14 @@ class CliCommands extends DrushCommands
         $ignored_commands = [
             'help',
             'php:cli',
-            'core:cli',
-            'php',
+                'core:cli',
+                'core-cli',
+                'php',
             'php:eval',
-            'eval',
-            'ev',
+                'eval',
+                'ev',
             'php:script',
-            'scr',
+                'scr',
         ];
         $php_keywords = $this->getPhpKeywords();
 

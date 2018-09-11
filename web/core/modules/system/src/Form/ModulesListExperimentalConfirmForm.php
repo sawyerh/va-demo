@@ -4,8 +4,6 @@ namespace Drupal\system\Form;
 
 /**
  * Builds a confirmation form for enabling experimental modules.
- *
- * @internal
  */
 class ModulesListExperimentalConfirmForm extends ModulesListConfirmForm {
 
@@ -27,7 +25,7 @@ class ModulesListExperimentalConfirmForm extends ModulesListConfirmForm {
    * {@inheritdoc}
    */
   protected function buildMessageList() {
-    $this->messenger()->addWarning($this->t('<a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']));
+    drupal_set_message($this->t('<a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']), 'warning');
 
     $items = parent::buildMessageList();
     // Add the list of experimental modules after any other messages.

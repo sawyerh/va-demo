@@ -202,9 +202,8 @@ class ConfigDependenciesTest extends KernelTestBase {
    * @dataProvider providerOnDependencyRemovalForResourceGranularity
    */
   public function testOnDependencyRemovalForResourceGranularity(array $configuration, $module, $expected_configuration) {
-    assert(is_string($module));
-    assert($expected_configuration === FALSE || is_array($expected_configuration));
-
+    assert('is_string($module)');
+    assert('$expected_configuration === FALSE || is_array($expected_configuration)');
     $config_dependencies = new ConfigDependencies(['hal_json' => 'hal', 'json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
     $rest_config = RestResourceConfig::create($configuration);
@@ -239,7 +238,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           'methods' => ['GET', 'POST'],
           'formats' => ['json'],
           'authentication' => ['cookie', 'basic_auth'],
-        ],
+        ]
       ],
       'resource with only HAL+JSON format' => [
         [
@@ -252,7 +251,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           ],
         ],
         'hal',
-        FALSE,
+        FALSE
       ],
       'resource with multiple authentication providers' => [
         [
@@ -269,7 +268,7 @@ class ConfigDependenciesTest extends KernelTestBase {
           'methods' => ['GET', 'POST'],
           'formats' => ['json', 'hal_json'],
           'authentication' => ['cookie'],
-        ],
+        ]
       ],
       'resource with only basic_auth authentication' => [
         [

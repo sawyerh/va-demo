@@ -6,5 +6,5 @@ version: VERSION
 core: 8.x
 configure: aggregator.admin_settings
 dependencies:
-  - drupal:file
-  - drupal:options
+  - file
+  - options

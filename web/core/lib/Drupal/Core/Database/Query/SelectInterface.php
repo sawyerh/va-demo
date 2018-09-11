@@ -95,7 +95,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * Note that this method must be called by reference as well:
    *
    * @code
-   * $tables =& $query->getTables();
+   * $fields =& $query->getTables();
    * @endcode
    *
    * @return
@@ -404,10 +404,10 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   on.
    *
    *   Example:
-   *   @code
+   *   <code>
    *   $query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'order_field');
    *   $query->orderBy('order_field', 'ASC');
-   *   @endcode
+   *   </code>
    * @param $direction
    *   The direction to sort. Legal values are "ASC" and "DESC". Any other value
    *   will be converted to "ASC".

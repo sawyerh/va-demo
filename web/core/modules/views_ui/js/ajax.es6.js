@@ -3,7 +3,7 @@
  * Handles AJAX submission and response in Views UI.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * Ajax command for highlighting elements.
    *
@@ -16,11 +16,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.viewsHighlight = function(
-    ajax,
-    response,
-    status,
-  ) {
+  Drupal.AjaxCommands.prototype.viewsHighlight = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
     $(response.selector).addClass('hilited');
   };
@@ -35,30 +31,24 @@
    * @param {string} [status]
    *   The XHR status code?
    */
-  Drupal.AjaxCommands.prototype.viewsSetForm = function(
-    ajax,
-    response,
-    status,
-  ) {
+  Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
     const $form = $('.js-views-ui-dialog form');
     // Identify the button that was clicked so that .ajaxSubmit() can use it.
     // We need to do this for both .click() and .mousedown() since JavaScript
     // code might trigger either behavior.
-    const $submitButtons = $form
-      .find('input[type=submit].js-form-submit, button.js-form-submit')
-      .once('views-ajax-submit');
-    $submitButtons.on('click mousedown', function() {
+    const $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
+    $submit_buttons.on('click mousedown', function () {
       this.form.clk = this;
     });
-    $form.once('views-ajax-submit').each(function() {
+    $form.once('views-ajax-submit').each(function () {
       const $form = $(this);
-      const elementSettings = {
+      const element_settings = {
         url: response.url,
         event: 'submit',
         base: $form.attr('id'),
         element: this,
       };
-      const ajaxForm = Drupal.ajax(elementSettings);
+      const ajaxForm = Drupal.ajax(element_settings);
       ajaxForm.$form = $form;
     });
   };
@@ -75,11 +65,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.viewsShowButtons = function(
-    ajax,
-    response,
-    status,
-  ) {
+  Drupal.AjaxCommands.prototype.viewsShowButtons = function (ajax, response, status) {
     $('div.views-edit-view div.form-actions').removeClass('js-hide');
     if (response.changed) {
       $('div.views-edit-view div.view-changed.messages').removeClass('js-hide');
@@ -96,11 +82,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.viewsTriggerPreview = function(
-    ajax,
-    response,
-    status,
-  ) {
+  Drupal.AjaxCommands.prototype.viewsTriggerPreview = function (ajax, response, status) {
     if ($('input#edit-displays-live-preview').is(':checked')) {
       $('#preview-submit').trigger('click');
     }
@@ -120,11 +102,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.viewsReplaceTitle = function(
-    ajax,
-    response,
-    status,
-  ) {
+  Drupal.AjaxCommands.prototype.viewsReplaceTitle = function (ajax, response, status) {
     const doc = document;
     // For the <title> element, make a best-effort attempt to replace the page
     // title and leave the site name alone. If the theme doesn't use the site
@@ -132,15 +110,9 @@
     const oldTitle = doc.title;
     // Escape the site name, in case it has special characters in it, so we can
     // use it in our regex.
-    const escapedSiteName = response.siteName.replace(
-      /[-[\]{}()*+?.,\\^$|#\s]/g,
-      '\\$&',
-    );
+    const escapedSiteName = response.siteName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     const re = new RegExp(`.+ (.) ${escapedSiteName}`);
-    doc.title = oldTitle.replace(
-      re,
-      `${response.title} $1 ${response.siteName}`,
-    );
+    doc.title = oldTitle.replace(re, `${response.title} $1 ${response.siteName}`);
 
     $('h1.page-title').text(response.title);
   };
@@ -151,7 +123,7 @@
    * @return {Array}
    *   An array of messages. Always empty array, to get rid of the messages.
    */
-  Drupal.theme.tableDragChangedWarning = function() {
+  Drupal.theme.tableDragChangedWarning = function () {
     return [];
   };
 
@@ -166,13 +138,11 @@
    */
   Drupal.behaviors.livePreview = {
     attach(context) {
-      $('input#edit-displays-live-preview', context)
-        .once('views-ajax')
-        .on('click', function() {
-          if ($(this).is(':checked')) {
-            $('#preview-submit').trigger('click');
-          }
-        });
+      $('input#edit-displays-live-preview', context).once('views-ajax').on('click', function () {
+        if ($(this).is(':checked')) {
+          $('#preview-submit').trigger('click');
+        }
+      });
     },
   };
 
@@ -186,15 +156,13 @@
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach(context) {
-      $('#views-tabset a')
-        .once('views-ajax')
-        .on('click', function() {
-          const href = $(this).attr('href');
-          // Cut of #views-tabset.
-          const displayId = href.substr(11);
-          // Set the form element.
-          $('#views-live-preview #preview-display-id').val(displayId);
-        });
+      $('#views-tabset a').once('views-ajax').on('click', function () {
+        const href = $(this).attr('href');
+        // Cut of #views-tabset.
+        const display_id = href.substr(11);
+        // Set the form element.
+        $('#views-live-preview #preview-display-id').val(display_id);
+      });
     },
   };
 
@@ -209,47 +177,41 @@
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,
     attach(context, settings) {
-      const baseElementSettings = {
+      const base_element_settings = {
         event: 'click',
         progress: { type: 'fullscreen' },
       };
       // Bind AJAX behaviors to all items showing the class.
-      $('a.views-ajax-link', context)
-        .once('views-ajax')
-        .each(function() {
-          const elementSettings = baseElementSettings;
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
-          // Set the URL to go to the anchor.
-          if ($(this).attr('href')) {
-            elementSettings.url = $(this).attr('href');
-          }
-          Drupal.ajax(elementSettings);
-        });
+      $('a.views-ajax-link', context).once('views-ajax').each(function () {
+        const element_settings = base_element_settings;
+        element_settings.base = $(this).attr('id');
+        element_settings.element = this;
+        // Set the URL to go to the anchor.
+        if ($(this).attr('href')) {
+          element_settings.url = $(this).attr('href');
+        }
+        Drupal.ajax(element_settings);
+      });
 
       $('div#views-live-preview a')
-        .once('views-ajax')
-        .each(function() {
+        .once('views-ajax').each(function () {
           // We don't bind to links without a URL.
           if (!$(this).attr('href')) {
             return true;
           }
 
-          const elementSettings = baseElementSettings;
+          const element_settings = base_element_settings;
           // Set the URL to go to the anchor.
-          elementSettings.url = $(this).attr('href');
-          if (
-            Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
-            'admin/structure/views'
-          ) {
+          element_settings.url = $(this).attr('href');
+          if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
             return true;
           }
 
-          elementSettings.wrapper = 'views-preview-wrapper';
-          elementSettings.method = 'replaceWith';
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
-          Drupal.ajax(elementSettings);
+          element_settings.wrapper = 'views-preview-wrapper';
+          element_settings.method = 'replaceWith';
+          element_settings.base = $(this).attr('id');
+          element_settings.element = this;
+          Drupal.ajax(element_settings);
         });
 
       // Within a live preview, make exposed widget form buttons re-trigger the
@@ -257,30 +219,26 @@
       // @todo Revisit this after fixing Views UI to display a Preview outside
       //   of the main Edit form.
       $('div#views-live-preview input[type=submit]')
-        .once('views-ajax')
-        .each(function(event) {
-          $(this).on('click', function() {
+        .once('views-ajax').each(function (event) {
+          $(this).on('click', function () {
             this.form.clk = this;
             return true;
           });
-          const elementSettings = baseElementSettings;
+          const element_settings = base_element_settings;
           // Set the URL to go to the anchor.
-          elementSettings.url = $(this.form).attr('action');
-          if (
-            Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
-            'admin/structure/views'
-          ) {
+          element_settings.url = $(this.form).attr('action');
+          if (Drupal.Views.getPath(element_settings.url).substring(0, 21) !== 'admin/structure/views') {
             return true;
           }
 
-          elementSettings.wrapper = 'views-preview-wrapper';
-          elementSettings.method = 'replaceWith';
-          elementSettings.event = 'click';
-          elementSettings.base = $(this).attr('id');
-          elementSettings.element = this;
+          element_settings.wrapper = 'views-preview-wrapper';
+          element_settings.method = 'replaceWith';
+          element_settings.event = 'click';
+          element_settings.base = $(this).attr('id');
+          element_settings.element = this;
 
-          Drupal.ajax(elementSettings);
+          Drupal.ajax(element_settings);
         });
     },
   };
-})(jQuery, Drupal, drupalSettings);
+}(jQuery, Drupal, drupalSettings));

@@ -153,7 +153,7 @@ class UsersCommand extends Command
             $roles = $this->drupalApi->getRoles();
         }
 
-        $result = $this->createUserData->create(
+        $users = $this->createUserData->create(
             $roles,
             $limit,
             $password,
@@ -167,26 +167,15 @@ class UsersCommand extends Command
           $this->trans('commands.create.users.messages.created'),
         ];
 
-        if ($result['success']) {
-            $this->getIo()->table($tableHeader, $result['success']);
+        if ($users['success']) {
+            $this->getIo()->table($tableHeader, $users['success']);
 
             $this->getIo()->success(
                 sprintf(
                     $this->trans('commands.create.users.messages.created-users'),
-                    count($result['success'])
+                    $limit
                 )
             );
-        }
-
-        if (isset($result['error'])) {
-            foreach ($result['error'] as $error) {
-                $this->getIo()->error(
-                    sprintf(
-                        $this->trans('commands.create.users.messages.error'),
-                        $error
-                    )
-                );
-            }
         }
 
         return 0;

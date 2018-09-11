@@ -4,7 +4,7 @@
 *
 * @license http://opensource.org/licenses/MIT
 * @link https://github.com/thephpleague/csv/
-* @version 9.1.4
+* @version 9.1.2
 * @package League.csv
 *
 * For the full copyright and license information, please view the LICENSE
@@ -127,7 +127,7 @@ class RFC4180Field extends php_user_filter
      */
     public static function register()
     {
-        if (!in_array(self::FILTERNAME, stream_get_filters(), true)) {
+        if (!in_array(self::FILTERNAME, stream_get_filters())) {
             stream_filter_register(self::FILTERNAME, __CLASS__);
         }
     }

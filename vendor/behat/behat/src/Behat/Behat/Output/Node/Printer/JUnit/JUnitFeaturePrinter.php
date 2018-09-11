@@ -10,7 +10,6 @@
 
 namespace Behat\Behat\Output\Node\Printer\JUnit;
 
-use Behat\Behat\Output\Node\EventListener\JUnit\JUnitDurationListener;
 use Behat\Behat\Output\Node\Printer\FeaturePrinter;
 use Behat\Behat\Output\Statistics\PhaseStatistics;
 use Behat\Behat\Tester\Result\StepResult;
@@ -31,15 +30,9 @@ final class JUnitFeaturePrinter implements FeaturePrinter
      */
     private $statistics;
 
-    /**
-     * @var JUnitDurationListener|null
-     */
-    private $durationListener;
-
-    public function __construct(PhaseStatistics $statistics, JUnitDurationListener $durationListener = null)
+    public function __construct(PhaseStatistics $statistics)
     {
         $this->statistics = $statistics;
-        $this->durationListener = $durationListener;
     }
 
     /**
@@ -64,7 +57,6 @@ final class JUnitFeaturePrinter implements FeaturePrinter
             'skipped' => $stats[TestResult::SKIPPED],
             'failures' => $stats[TestResult::FAILED],
             'errors' => $stats[TestResult::PENDING] + $stats[StepResult::UNDEFINED],
-            'time' => $this->durationListener ? $this->durationListener->getFeatureDuration($feature) : '',
         ));
         $this->statistics->reset();
     }

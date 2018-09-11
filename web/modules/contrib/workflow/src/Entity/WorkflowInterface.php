@@ -130,7 +130,7 @@ interface WorkflowInterface {
    * @param string $to_sid
    * @param array $values
    *
-   * @return WorkflowConfigTransitionInterface
+   * @return mixed|null|static
    */
   public function createTransition($from_sid, $to_sid, $values = []);
 

@@ -8,8 +8,6 @@ use Drupal\Core\Url;
 
 /**
  * Provides the filter format disable form.
- *
- * @internal
  */
 class FilterDisableForm extends EntityConfirmFormBase {
 
@@ -46,7 +44,7 @@ class FilterDisableForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->disable()->save();
-    $this->messenger()->addStatus($this->t('Disabled text format %format.', ['%format' => $this->entity->label()]));
+    drupal_set_message($this->t('Disabled text format %format.', ['%format' => $this->entity->label()]));
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

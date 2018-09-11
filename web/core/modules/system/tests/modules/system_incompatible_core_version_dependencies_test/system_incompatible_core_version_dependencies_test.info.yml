@@ -5,4 +5,4 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - drupal:system_incompatible_core_version_test
+  - system_incompatible_core_version_test

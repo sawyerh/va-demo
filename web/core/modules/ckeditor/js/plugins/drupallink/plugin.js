@@ -32,37 +32,25 @@
 
   function getAttributes(editor, data) {
     var set = {};
-    Object.keys(data || {}).forEach(function (attributeName) {
-      set[attributeName] = data[attributeName];
-    });
+    for (var attributeName in data) {
+      if (data.hasOwnProperty(attributeName)) {
+        set[attributeName] = data[attributeName];
+      }
+    }
 
     set['data-cke-saved-href'] = set.href;
 
     var removed = {};
-    Object.keys(set).forEach(function (s) {
-      delete removed[s];
-    });
+    for (var s in set) {
+      if (set.hasOwnProperty(s)) {
+        delete removed[s];
+      }
+    }
 
     return {
       set: set,
       removed: CKEDITOR.tools.objectKeys(removed)
     };
-  }
-
-  function getSelectedLink(editor) {
-    var selection = editor.getSelection();
-    var selectedElement = selection.getSelectedElement();
-    if (selectedElement && selectedElement.is('a')) {
-      return selectedElement;
-    }
-
-    var range = selection.getRanges(true)[0];
-
-    if (range) {
-      range.shrink(CKEDITOR.SHRINK_TEXT);
-      return editor.elementPath(range.getCommonAncestor()).contains('a', 1);
-    }
-    return null;
   }
 
   CKEDITOR.plugins.add('drupallink', {
@@ -118,25 +106,24 @@
                 range.selectNodeContents(text);
               }
 
-              var style = new CKEDITOR.style({
-                element: 'a',
-                attributes: returnValues.attributes
-              });
+              var style = new CKEDITOR.style({ element: 'a', attributes: returnValues.attributes });
               style.type = CKEDITOR.STYLE_INLINE;
               style.applyToRange(range);
               range.select();
 
               linkElement = getSelectedLink(editor);
             } else if (linkElement) {
-                Object.keys(returnValues.attributes || {}).forEach(function (attrName) {
-                  if (returnValues.attributes[attrName].length > 0) {
-                    var value = returnValues.attributes[attrName];
-                    linkElement.data('cke-saved-' + attrName, value);
-                    linkElement.setAttribute(attrName, value);
-                  } else {
-                      linkElement.removeAttribute(attrName);
-                    }
-                });
+                for (var attrName in returnValues.attributes) {
+                  if (returnValues.attributes.hasOwnProperty(attrName)) {
+                    if (returnValues.attributes[attrName].length > 0) {
+                      var value = returnValues.attributes[attrName];
+                      linkElement.data('cke-saved-' + attrName, value);
+                      linkElement.setAttribute(attrName, value);
+                    } else {
+                        linkElement.removeAttribute(attrName);
+                      }
+                  }
+                }
               }
 
             editor.fire('saveSnapshot');
@@ -160,11 +147,7 @@
           }
         }),
         exec: function exec(editor) {
-          var style = new CKEDITOR.style({
-            element: 'a',
-            type: CKEDITOR.STYLE_INLINE,
-            alwaysRemoveElement: 1
-          });
+          var style = new CKEDITOR.style({ element: 'a', type: CKEDITOR.STYLE_INLINE, alwaysRemoveElement: 1 });
           editor.removeStyle(style);
         },
         refresh: function refresh(editor, path) {
@@ -231,16 +214,29 @@
 
           var menu = {};
           if (anchor.getAttribute('href') && anchor.getChildCount()) {
-            menu = {
-              link: CKEDITOR.TRISTATE_OFF,
-              unlink: CKEDITOR.TRISTATE_OFF
-            };
+            menu = { link: CKEDITOR.TRISTATE_OFF, unlink: CKEDITOR.TRISTATE_OFF };
           }
           return menu;
         });
       }
     }
   });
+
+  function getSelectedLink(editor) {
+    var selection = editor.getSelection();
+    var selectedElement = selection.getSelectedElement();
+    if (selectedElement && selectedElement.is('a')) {
+      return selectedElement;
+    }
+
+    var range = selection.getRanges(true)[0];
+
+    if (range) {
+      range.shrink(CKEDITOR.SHRINK_TEXT);
+      return editor.elementPath(range.getCommonAncestor()).contains('a', 1);
+    }
+    return null;
+  }
 
   CKEDITOR.plugins.drupallink = {
     parseLinkAttributes: parseAttributes,

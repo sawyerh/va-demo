@@ -307,7 +307,7 @@ class {{ entity_class }} extends {% if revisionable %}RevisionableContentEntityB
 {% endif %}
       ->setDefaultValue(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
+        'type' => 'checkbox',
         'weight' => -3,
       ]);
 

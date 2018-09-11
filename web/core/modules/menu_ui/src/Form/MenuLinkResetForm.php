@@ -12,8 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a confirmation form for resetting a single modified menu link.
- *
- * @internal
  */
 class MenuLinkResetForm extends ConfirmFormBase {
 
@@ -102,7 +100,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->link = $this->menuLinkManager->resetLink($this->link->getPluginId());
-    $this->messenger()->addStatus($this->t('The menu link was reset to its default settings.'));
+    drupal_set_message($this->t('The menu link was reset to its default settings.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

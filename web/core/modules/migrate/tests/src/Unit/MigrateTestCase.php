@@ -29,7 +29,7 @@ abstract class MigrateTestCase extends UnitTestCase {
   /**
    * Local store for mocking setStatus()/getStatus().
    *
-   * @var int
+   * @var \Drupal\migrate\Plugin\MigrationInterface::STATUS_*
    */
   protected $migrationStatus = MigrationInterface::STATUS_IDLE;
 
@@ -77,6 +77,11 @@ abstract class MigrateTestCase extends UnitTestCase {
       ]);
 
     $configuration = &$this->migrationConfiguration;
+
+    $migration->method('getHighWaterProperty')
+      ->willReturnCallback(function () use ($configuration) {
+        return isset($configuration['high_water_property']) ? $configuration['high_water_property'] : '';
+      });
 
     $migration->method('set')
       ->willReturnCallback(function ($argument, $value) use (&$configuration) {

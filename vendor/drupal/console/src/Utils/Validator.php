@@ -314,7 +314,7 @@ class Validator
             if (!empty($checked_extensions['no_extensions'])) {
                 $io->warning(
                     sprintf(
-                        $this->translatorManager->trans('commands.generate.module.warnings.module-unavailable'),
+                        $this->translatorManager->trans('validator.warnings.extension-unavailable'),
                         implode(', ', $checked_extensions['no_extensions'])
                     )
                 );

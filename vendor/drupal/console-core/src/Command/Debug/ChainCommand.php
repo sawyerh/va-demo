@@ -73,13 +73,9 @@ class ChainCommand extends Command
 
             $tableRows = [];
             foreach ($fileNames as $file) {
-                $commandName = '';
-                if (array_key_exists('command', $files[$directory.$file])) {
-                    $commandName = $files[$directory.$file]['command'];
-                }
                 $tableRows[] = [
                     'file'  => $file,
-                    'command' => $commandName
+                    'command' => $files[$directory.$file]['command']
                 ];
             }
 

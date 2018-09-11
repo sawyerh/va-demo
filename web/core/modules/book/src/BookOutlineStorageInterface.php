@@ -69,7 +69,7 @@ interface BookOutlineStorageInterface {
   public function delete($nid);
 
   /**
-   * Loads book's children using its parent ID.
+   * Loads book's children using it's parent ID.
    *
    * @param int $pid
    *   The book's parent ID.
@@ -109,6 +109,7 @@ interface BookOutlineStorageInterface {
    *   The last insert ID of the query, if one exists.
    */
   public function insert($link, $parents);
+
 
   /**
    * Updates book reference for links that were moved between books.

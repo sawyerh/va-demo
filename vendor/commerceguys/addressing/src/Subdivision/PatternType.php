@@ -2,7 +2,7 @@
 
 namespace CommerceGuys\Addressing\Subdivision;
 
-use CommerceGuys\Addressing\AbstractEnum;
+use CommerceGuys\Enum\AbstractEnum;
 
 /**
  * Enumerates available pattern types.

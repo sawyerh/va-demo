@@ -4,11 +4,6 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 
-/**
- * Builds a form to test table select with '#multiple' as TRUE.
- *
- * @internal
- */
 class FormTestTableSelectMultipleTrueForm extends FormTestTableSelectFormBase {
 
   /**
@@ -31,7 +26,7 @@ class FormTestTableSelectMultipleTrueForm extends FormTestTableSelectFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $selected = $form_state->getValue('tableselect');
     foreach ($selected as $key => $value) {
-      $this->messenger()->addStatus($this->t('Submitted: @key = @value', ['@key' => $key, '@value' => $value]));
+      drupal_set_message(t('Submitted: @key = @value', ['@key' => $key, '@value' => $value]));
     }
   }
 

@@ -2,7 +2,7 @@
 
 namespace CommerceGuys\Addressing\AddressFormat;
 
-use CommerceGuys\Addressing\AbstractEnum;
+use CommerceGuys\Enum\AbstractEnum;
 
 /**
  * Enumerates available locality types.

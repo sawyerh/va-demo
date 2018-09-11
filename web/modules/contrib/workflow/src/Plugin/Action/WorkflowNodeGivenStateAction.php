@@ -73,7 +73,7 @@ class WorkflowNodeGivenStateAction extends WorkflowStateActionBase {
     }
 
     // Fire the transition.
-    workflow_execute_transition($transition, $force = FALSE);
+    workflow_execute_transition($transition, $force);
   }
 
 }

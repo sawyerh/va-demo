@@ -6,20 +6,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a confirmation form to delete multiple media items at once.
- *
- * @deprecated in Drupal 8.6.x, to be removed before Drupal 9.0.0.
- *   This route is not used in Drupal core. As an internal API, it may also be
- *   removed in a minor release. If you are using it, copy the class
- *   and the related "entity.media.multiple_delete_confirm" route to your
- *   module.
- *
- * @internal
  */
 class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
 
@@ -33,7 +25,7 @@ class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
   /**
    * The tempstore factory.
    *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -47,13 +39,12 @@ class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
   /**
    * Constructs a MediaDeleteMultipleConfirmForm form object.
    *
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $manager
    *   The entity type manager.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityTypeManagerInterface $manager) {
-    @trigger_error(__CLASS__ . ' is deprecated in Drupal 8.6.0 and will be removed before Drupal 9.0.0. It is not used in Drupal core. As an internal API, it may also be removed in a minor release. If you are using it, copy the class and the related "entity.media.multiple_delete_confirm" route to your module.', E_USER_DEPRECATED);
     $this->tempStoreFactory = $temp_store_factory;
     $this->storage = $manager->getStorage('media');
   }
@@ -63,7 +54,7 @@ class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('tempstore.private'),
+      $container->get('user.private_tempstore'),
       $container->get('entity_type.manager')
     );
   }
@@ -202,7 +193,7 @@ class MediaDeleteMultipleConfirmForm extends ConfirmFormBase {
       }
 
       if ($total_count) {
-        $this->messenger()->addStatus($this->formatPlural($total_count, 'Deleted 1 media item.', 'Deleted @count media items.'));
+        drupal_set_message($this->formatPlural($total_count, 'Deleted 1 media item.', 'Deleted @count media items.'));
       }
 
       $this->tempStoreFactory->get('media_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());

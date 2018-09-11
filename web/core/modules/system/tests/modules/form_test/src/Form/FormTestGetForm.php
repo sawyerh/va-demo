@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form to test whether GET forms have a CSRF token.
- *
- * @internal
  */
 class FormTestGetForm extends FormBase {
 
@@ -35,7 +33,7 @@ class FormTestGetForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->messenger()->addStatus('The form_test_get_form form has been submitted successfully.');
+    drupal_set_message('The form_test_get_form form has been submitted successfully.');
   }
 
 }

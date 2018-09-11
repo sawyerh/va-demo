@@ -5,23 +5,20 @@ namespace Drupal\user\Form;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for cancelling multiple user accounts.
- *
- * @internal
  */
 class UserMultipleCancelConfirm extends ConfirmFormBase {
 
   /**
    * The temp store factory.
    *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -42,7 +39,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   /**
    * Constructs a new UserMultipleCancelConfirm.
    *
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The temp store factory.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
@@ -60,7 +57,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('tempstore.private'),
+      $container->get('user.private_tempstore'),
       $container->get('entity.manager')->getStorage('user'),
       $container->get('entity.manager')
     );
@@ -133,7 +130,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     if (isset($root)) {
       $redirect = (count($accounts) == 1);
       $message = $this->t('The user account %name cannot be canceled.', ['%name' => $root->label()]);
-      $this->messenger()->addMessage($message, $redirect ? MessengerInterface::TYPE_ERROR : MessengerInterface::TYPE_WARNING);
+      drupal_set_message($message, $redirect ? 'error' : 'warning');
       // If only user 1 was selected, redirect to the overview.
       if ($redirect) {
         return $this->redirect('entity.user.collection');

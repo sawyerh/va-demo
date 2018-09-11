@@ -8,8 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for the test entity edit forms.
- *
- * @internal
  */
 class EntityTestForm extends ContentEntityForm {
 
@@ -65,7 +63,7 @@ class EntityTestForm extends ContentEntityForm {
       else {
         $message = t('%entity_type @id has been updated.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
       }
-      $this->messenger()->addStatus($message);
+      drupal_set_message($message);
 
       if ($entity->id()) {
         $entity_type = $entity->getEntityTypeId();
@@ -76,7 +74,7 @@ class EntityTestForm extends ContentEntityForm {
       }
       else {
         // Error on save.
-        $this->messenger()->addError($this->t('The entity could not be saved.'));
+        drupal_set_message(t('The entity could not be saved.'), 'error');
         $form_state->setRebuild();
       }
     }

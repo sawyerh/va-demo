@@ -140,14 +140,11 @@ class Drupal implements DrupalInterface
                 $io->writeln('➤ Registering dynamic services');
             }
 
-            $configuration = $this->configurationManager->getConfiguration();
-
             $drupalKernel->addServiceModifier(
                 new DrupalServiceModifier(
                     $this->drupalFinder->getComposerRoot(),
                     'drupal.command',
-                    'drupal.generator',
-                    $configuration
+                    'drupal.generator'
                 )
             );
 
@@ -196,6 +193,8 @@ class Drupal implements DrupalInterface
                 $this->configurationManager
             );
 
+            $configuration = $this->configurationManager->getConfiguration();
+
             $container->get('console.translator_manager')
                 ->loadCoreLanguage(
                     $configuration->get('application.language'),
@@ -224,14 +223,6 @@ class Drupal implements DrupalInterface
         } catch (\Exception $e) {
             $container = $this->bootDrupalConsoleCore();
             $container->set('class_loader', $this->autoload);
-
-            $container->get('console.renderer')
-                ->setSkeletonDirs(
-                    [
-                        $this->drupalFinder->getComposerRoot().DRUPAL_CONSOLE.'/templates/',
-                        $this->drupalFinder->getComposerRoot().DRUPAL_CONSOLE_CORE.'/templates/'
-                    ]
-                );
 
             $notifyErrorCodes = [
                 0,

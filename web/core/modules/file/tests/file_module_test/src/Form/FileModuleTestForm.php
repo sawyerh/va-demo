@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for file_module_test module.
- *
- * @internal
  */
 class FileModuleTestForm extends FormBase {
 
@@ -85,7 +83,7 @@ class FileModuleTestForm extends FormBase {
       $fids[] = $fid;
     }
 
-    \Drupal::messenger()->addStatus($this->t('The file ids are %fids.', ['%fids' => implode(',', $fids)]));
+    drupal_set_message($this->t('The file ids are %fids.', ['%fids' => implode(',', $fids)]));
   }
 
 }

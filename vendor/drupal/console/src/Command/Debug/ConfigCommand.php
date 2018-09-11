@@ -9,7 +9,6 @@ namespace Drupal\Console\Command\Debug;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\CachedStorage;
@@ -56,12 +55,6 @@ class ConfigCommand extends Command
                 InputArgument::OPTIONAL,
                 $this->trans('commands.debug.config.arguments.name')
             )
-            ->addOption(
-                'show-overridden',
-                null,
-                InputOption::VALUE_NONE,
-                $this->trans('commands.debug.config.options.show-overridden')
-            )
             ->setAliases(['dc']);
     }
 
@@ -71,12 +64,10 @@ class ConfigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $configName = $input->getArgument('name');
-        $showOverridden = $input->getOption('show-overridden');
-
         if (!$configName) {
             $this->getAllConfigurations();
         } else {
-            $this->getConfigurationByName($configName, $showOverridden);
+            $this->getConfigurationByName($configName);
         }
     }
 
@@ -97,25 +88,16 @@ class ConfigCommand extends Command
     }
 
     /**
-     * @param $config_name     String
-     * @param $showOverridden  bool
+     * @param $config_name    String
      */
-    private function getConfigurationByName($config_name, $showOverridden = false)
+    private function getConfigurationByName($config_name)
     {
         if ($this->configStorage->exists($config_name)) {
             $tableHeader = [
                 $config_name,
             ];
-            $configuration = $this->configStorage->read($config_name);
-            if ($showOverridden) {
-                $configurationKeys = array_keys($configuration);
-                foreach ($configurationKeys as $configurationKey) {
-                    $configuration[$configurationKey] = $this->configFactory
-                        ->get($config_name)
-                        ->get($configurationKey);
-                }
-            }
 
+            $configuration = $this->configStorage->read($config_name);
             $configurationEncoded = Yaml::encode($configuration);
             $tableRows = [];
             $tableRows[] = [

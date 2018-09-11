@@ -7,8 +7,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a form for adding a filter format.
- *
- * @internal
  */
 class FilterFormatEditForm extends FilterFormatFormBase {
 
@@ -31,7 +29,7 @@ class FilterFormatEditForm extends FilterFormatFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    $this->messenger()->addStatus($this->t('The text format %format has been updated.', ['%format' => $this->entity->label()]));
+    drupal_set_message($this->t('The text format %format has been updated.', ['%format' => $this->entity->label()]));
     return $this->entity;
   }
 

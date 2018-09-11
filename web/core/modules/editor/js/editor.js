@@ -7,31 +7,9 @@
 
 (function ($, Drupal, drupalSettings) {
   function findFieldForFormatSelector($formatSelector) {
-    var fieldId = $formatSelector.attr('data-editor-for');
+    var field_id = $formatSelector.attr('data-editor-for');
 
-    return $('#' + fieldId).get(0);
-  }
-
-  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
-    if (format.editor.isXssSafe) {
-      callback(field, format);
-    } else {
-        $.ajax({
-          url: Drupal.url('editor/filter_xss/' + format.format),
-          type: 'POST',
-          data: {
-            value: field.value,
-            original_format_id: originalFormatID
-          },
-          dataType: 'json',
-          success: function success(xssFilteredValue) {
-            if (xssFilteredValue !== false) {
-              field.value = xssFilteredValue;
-            }
-            callback(field, format);
-          }
-        });
-      }
+    return $('#' + field_id).get(0);
   }
 
   function changeTextEditor(field, newFormatID) {
@@ -190,4 +168,26 @@
       }
     }
   };
+
+  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
+    if (format.editor.isXssSafe) {
+      callback(field, format);
+    } else {
+        $.ajax({
+          url: Drupal.url('editor/filter_xss/' + format.format),
+          type: 'POST',
+          data: {
+            value: field.value,
+            original_format_id: originalFormatID
+          },
+          dataType: 'json',
+          success: function success(xssFilteredValue) {
+            if (xssFilteredValue !== false) {
+              field.value = xssFilteredValue;
+            }
+            callback(field, format);
+          }
+        });
+      }
+  }
 })(jQuery, Drupal, drupalSettings);

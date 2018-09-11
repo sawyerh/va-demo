@@ -5,5 +5,5 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - drupal:media
-  - drupal:views
+  - media
+  - views

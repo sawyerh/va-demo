@@ -13,9 +13,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *   core = {7},
  *   type_map = {
  *     "link_field" = "link"
- *   },
- *   source_module = "link",
- *   destination_module = "link"
+ *   }
  * )
  *
  * This plugin provides the exact same functionality as the Drupal 6 "link"
@@ -38,9 +36,9 @@ class LinkField extends D6LinkField {
   }
 
   /**
-   * @inheritdoc}
+   * {@inheritdoc}
    */
-  public function alterFieldInstanceMigration(MigrationInterface $migration) {
+  public function processFieldInstance(MigrationInterface $migration) {
     $process = [
       'plugin' => 'static_map',
       'source' => 'settings/title',

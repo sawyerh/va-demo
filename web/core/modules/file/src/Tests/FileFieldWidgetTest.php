@@ -4,6 +4,7 @@ namespace Drupal\file\Tests;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -159,7 +160,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->drupalGet("node/add/$type_name");
       foreach ([$field_name2, $field_name] as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = ['files[' . $each_field_name . '_' . $delta . '][]' => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
+          $edit = ['files[' . $each_field_name . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri())];
           // If the Upload button doesn't exist, drupalPostForm() will automatically
           // fail with an assertion message.
           $this->drupalPostForm(NULL, $edit, t('Upload'));
@@ -269,7 +270,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Try to upload exactly the allowed number of files on revision. Create an
     // empty node first, to fill it in its first revision.
     $node = $this->drupalCreateNode([
-      'type' => $type_name,
+      'type' => $type_name
     ]);
     $this->uploadNodeFile($test_file, $field_name, $node->id(), 1);
     $node_storage->resetCache([$nid]);
@@ -372,7 +373,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
     $edit = [
-      'files[field_' . $name . '_' . 0 . ']' => \Drupal::service('file_system')->realpath($text_file->getFileUri()),
+      'files[field_' . $name . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
       'comment_body[0][value]' => $comment_body = $this->randomMachineName(),
     ];
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
@@ -428,7 +429,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $name = 'files[' . $field_name . '_0]';
 
       // Upload file with incorrect extension, check for validation error.
-      $edit[$name] = \Drupal::service('file_system')->realpath($test_file_image->getFileUri());
+      $edit[$name] = drupal_realpath($test_file_image->getFileUri());
       switch ($type) {
         case 'nojs':
           $this->drupalPostForm(NULL, $edit, t('Upload'));
@@ -442,7 +443,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertRaw($error_message, t('Validation error when file with wrong extension uploaded (JSMode=%type).', ['%type' => $type]));
 
       // Upload file with correct extension, check that error message is removed.
-      $edit[$name] = \Drupal::service('file_system')->realpath($test_file_text->getFileUri());
+      $edit[$name] = drupal_realpath($test_file_text->getFileUri());
       switch ($type) {
         case 'nojs':
           $this->drupalPostForm(NULL, $edit, t('Upload'));
@@ -460,7 +461,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests file widget element.
    */
   public function testWidgetElement() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = Unicode::strtolower($this->randomMachineName());
     $html_name = str_replace('_', '-', $field_name);
     $this->createFileField($field_name, 'node', 'article', ['cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED]);
     $file = $this->getTestFile('text');

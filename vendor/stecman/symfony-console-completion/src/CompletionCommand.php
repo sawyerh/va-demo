@@ -33,12 +33,6 @@ Or for an alias:
 
 END
             );
-
-        // Hide this command from listing if supported
-        // Command::setHidden() was not available before Symfony 3.2.0
-        if (method_exists($this, 'setHidden')) {
-            $this->setHidden(true);
-        }
     }
 
     /**
@@ -62,7 +56,8 @@ END
             $alias = $input->getOption('program');
             $multiple = (bool)$input->getOption('multiple');
 
-            if (!$alias) {
+            // When completing for multiple apps having absolute path in the alias doesn't make sense.
+            if (!$alias && $multiple) {
                 $alias = basename($program);
             }
 

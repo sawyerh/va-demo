@@ -8,8 +8,6 @@ use Drupal\Core\Render\Element;
 
 /**
  * Builds the shortcut set customize form.
- *
- * @internal
  */
 class SetCustomize extends EntityForm {
 
@@ -106,7 +104,7 @@ class SetCustomize extends EntityForm {
       $shortcut->setWeight($weight);
       $shortcut->save();
     }
-    $this->messenger()->addStatus($this->t('The shortcut set has been updated.'));
+    drupal_set_message(t('The shortcut set has been updated.'));
   }
 
 }

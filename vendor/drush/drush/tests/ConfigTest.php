@@ -2,8 +2,6 @@
 
 namespace Unish;
 
-use Composer\Semver\Comparator;
-
 /**
  * Tests for Configuration Management commands for D8+.
  * @group commands
@@ -16,25 +14,24 @@ class ConfigCase extends CommandUnishTestCase
     {
         if (!$this->getSites()) {
             $this->setUpDrupal(1, true);
-            // Field module is needed for now for --existing-config. It is not actually
-            // enabled after testing profile is installed. Its required by file and update though.
-            $this->drush('pm:enable', ['config, field']);
+            $this->drush('pm-enable', ['config']);
         }
     }
 
     public function testConfigGetSet()
     {
-        $this->drush('config:set', ['system.site', 'name', 'config_test']);
-        $this->drush('config:get', ['system.site', 'name']);
+        $this->drush('config-set', ['system.site', 'name', 'config_test']);
+        $this->drush('config-get', ['system.site', 'name']);
         $this->assertEquals("'system.site:name': config_test", $this->getOutput(), 'Config was successfully set and get.');
     }
 
-    public function testConfigExportImportStatusExistingConfig()
+    public function testConfigExportImportStatus()
     {
         // Get path to sync dir.
-        $this->drush('core:status', [], ['format' => 'json', 'fields' => 'config-sync']);
+        $this->drush('core-status', [], ['format' => 'json', 'fields' => 'config-sync']);
         $sync = $this->webroot() . '/' . $this->getOutputFromJSON('config-sync');
         $system_site_yml = $sync . '/system.site.yml';
+        $core_extension_yml = $sync . '/core.extension.yml';
 
         // Test export.
         $this->drush('config-export');
@@ -43,12 +40,12 @@ class ConfigCase extends CommandUnishTestCase
         // Test import and status by finishing the round trip.
         $contents = file_get_contents($system_site_yml);
         $contents = preg_replace('/front: .*/', 'front: unish', $contents);
-        file_put_contents($system_site_yml, $contents);
-
+        $contents = file_put_contents($system_site_yml, $contents);
+    
         // Test status of changed configuration.
         $this->drush('config:status');
         $this->assertContains('system.site', $this->getOutput(), 'config:status correctly reports changes.');
-
+    
         // Test import.
         $this->drush('config-import');
         $this->drush('config-get', ['system.site', 'page'], ['format' => 'json']);
@@ -58,7 +55,7 @@ class ConfigCase extends CommandUnishTestCase
         // Test status of identical configuration.
         $this->drush('config:status', [], ['format' => 'list']);
         $this->assertEquals('', $this->getOutput(), 'config:status correctly reports identical config.');
-
+      
         // Similar, but this time via --partial option.
         $contents = file_get_contents($system_site_yml);
         $contents = preg_replace('/front: .*/', 'front: unish partial', $contents);
@@ -69,18 +66,5 @@ class ConfigCase extends CommandUnishTestCase
         $this->drush('config-get', ['system.site', 'page'], ['format' => 'json']);
         $page = $this->getOutputFromJSON('system.site:page');
         $this->assertContains('unish partial', $page->front, '--partial was successfully imported.');
-
-        // Test the --existing-config option for site:install.
-        $this->drush('core:status', ['drupal-version'], ['format' => 'string']);
-        $drupal_version = $this->getOutputRaw();
-        if (Comparator::greaterThanOrEqualTo($drupal_version, '8.6')) {
-            $contents = file_get_contents($system_site_yml);
-            $contents = preg_replace('/front: .*/', 'front: unish existing', $contents);
-            file_put_contents($system_site_yml, $contents);
-            $this->setUpDrupal(1, true, ['existing-config' => null]);
-            $this->drush('config-get', ['system.site', 'page'], ['format' => 'json']);
-            $page = $this->getOutputFromJSON('system.site:page');
-            $this->assertContains('unish existing', $page->front, 'Existing config was successfully imported during site:install.');
-        }
     }
 }

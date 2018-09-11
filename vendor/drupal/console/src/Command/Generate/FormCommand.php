@@ -8,7 +8,6 @@
 namespace Drupal\Console\Command\Generate;
 
 use Drupal\Console\Command\Shared\ArrayInputTrait;
-use Drupal\Console\Utils\TranslatorManager;
 use Drupal\Console\Utils\Validator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -75,7 +74,6 @@ abstract class FormCommand extends ContainerAwareCommand
     /**
      * FormCommand constructor.
      *
-     * @param TranslatorManager      $translator
      * @param Manager                $extensionManager
      * @param FormGenerator          $generator
      * @param ChainQueue             $chainQueue
@@ -85,7 +83,6 @@ abstract class FormCommand extends ContainerAwareCommand
      * @param RouteProviderInterface $routeProvider
      */
     public function __construct(
-        TranslatorManager $translator,
         Manager $extensionManager,
         FormGenerator $generator,
         ChainQueue $chainQueue,
@@ -94,7 +91,6 @@ abstract class FormCommand extends ContainerAwareCommand
         ElementInfoManager $elementInfoManager,
         RouteProviderInterface $routeProvider
     ) {
-        $this->setTranslator($translator);
         $this->extensionManager = $extensionManager;
         $this->generator = $generator;
         $this->chainQueue = $chainQueue;
