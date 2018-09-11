@@ -13,9 +13,7 @@ use Drupal\migrate_drupal\Plugin\migrate\cckfield\CckFieldPluginBase;
  *   core = {6},
  *   type_map = {
  *     "link_field" = "link"
- *   },
- *   source_module = "link",
- *   destination_module = "link"
+ *   }
  * )
  *
  * @deprecated in Drupal 8.3.x and will be removed in Drupal 9.0.x. Use
@@ -29,8 +27,8 @@ class LinkField extends CckFieldPluginBase {
    * {@inheritdoc}
    */
   public function getFieldFormatterMap() {
-    // See d6_field_formatter_settings.yml and FieldPluginBase
-    // alterFieldFormatterMigration().
+    // See d6_field_formatter_settings.yml and CckFieldPluginBase
+    // processFieldFormatter().
     return [
       'default' => 'link',
       'plain' => 'link',

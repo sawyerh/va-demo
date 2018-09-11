@@ -8,8 +8,6 @@ use Drupal\Core\Url;
 
 /**
  * Form handler for the aggregator feed edit forms.
- *
- * @internal
  */
 class FeedForm extends ContentEntityForm {
 
@@ -22,12 +20,12 @@ class FeedForm extends ContentEntityForm {
     $label = $feed->label();
     $view_link = $feed->link($label, 'canonical');
     if ($status == SAVED_UPDATED) {
-      $this->messenger()->addStatus($this->t('The feed %feed has been updated.', ['%feed' => $view_link]));
+      drupal_set_message($this->t('The feed %feed has been updated.', ['%feed' => $view_link]));
       $form_state->setRedirectUrl($feed->urlInfo('canonical'));
     }
     else {
       $this->logger('aggregator')->notice('Feed %feed added.', ['%feed' => $feed->label(), 'link' => $this->l($this->t('View'), new Url('aggregator.admin_overview'))]);
-      $this->messenger()->addStatus($this->t('The feed %feed has been added.', ['%feed' => $view_link]));
+      drupal_set_message($this->t('The feed %feed has been added.', ['%feed' => $view_link]));
     }
   }
 

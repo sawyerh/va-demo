@@ -13,7 +13,6 @@ namespace Behat\Testwork\Argument;
 use ReflectionFunctionAbstract;
 use ReflectionClass;
 use ReflectionParameter;
-use ReflectionException;
 
 /**
  * Organises function arguments using its reflection.
@@ -226,11 +225,7 @@ final class MixedArgumentOrganiser implements ArgumentOrganiser
                 continue;
             }
 
-            try {
-                $reflectionClass = $parameter->getClass();
-            } catch (ReflectionException $e) {
-                continue;
-            }
+            $reflectionClass = $parameter->getClass();
 
             if (!$reflectionClass) {
                 continue;

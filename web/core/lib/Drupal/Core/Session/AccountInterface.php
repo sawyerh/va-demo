@@ -76,12 +76,10 @@ interface AccountInterface {
    *   language if the user has no language preference.
    *
    * @return string
-   *   Returned language code depends upon following:
-   *   - The user preferred language code is returned if set in the account.
-   *   - If the user has no preferred language and $fallback_to_default is TRUE
-   *     then the site default language code is returned.
-   *   - If the user has no preferred language and $fallback_to_default is FALSE
-   *     then empty string is returned.
+   *   The language code that is preferred by the account. If the preferred
+   *   language is not set or is a language not configured anymore on the site,
+   *   the site default is returned or an empty string is returned (if
+   *   $fallback_to_default is FALSE).
    */
   public function getPreferredLangcode($fallback_to_default = TRUE);
 
@@ -150,9 +148,8 @@ interface AccountInterface {
   /**
    * Returns the email address of this account.
    *
-   * @return string|null
-   *   The email address, or NULL if the account is anonymous or the user does
-   *   not have an email address.
+   * @return string
+   *   The email address.
    */
   public function getEmail();
 

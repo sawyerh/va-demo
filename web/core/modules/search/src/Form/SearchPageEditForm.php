@@ -6,8 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form for editing a search page.
- *
- * @internal
  */
 class SearchPageEditForm extends SearchPageFormBase {
 
@@ -26,7 +24,7 @@ class SearchPageEditForm extends SearchPageFormBase {
   public function save(array $form, FormStateInterface $form_state) {
     parent::save($form, $form_state);
 
-    $this->messenger()->addStatus($this->t('The %label search page has been updated.', ['%label' => $this->entity->label()]));
+    drupal_set_message($this->t('The %label search page has been updated.', ['%label' => $this->entity->label()]));
   }
 
 }

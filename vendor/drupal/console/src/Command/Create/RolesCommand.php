@@ -76,7 +76,7 @@ class RolesCommand extends Command
     {
         $limit = $input->getOption('limit')?:5;
 
-        $result = $this->createRoleData->create(
+        $roles = $this->createRoleData->create(
             $limit
         );
 
@@ -85,26 +85,15 @@ class RolesCommand extends Command
             $this->trans('commands.create.roles.messages.role-name'),
         ];
 
-        if ($result['success']) {
-            $this->getIo()->table($tableHeader, $result['success']);
+        if ($roles['success']) {
+            $this->getIo()->table($tableHeader, $roles['success']);
 
             $this->getIo()->success(
                 sprintf(
                     $this->trans('commands.create.roles.messages.created-roles'),
-                    count($result['success'])
+                    $limit
                 )
             );
-        }
-
-        if (isset($result['error'])) {
-            foreach ($result['error'] as $error) {
-                $this->getIo()->error(
-                    sprintf(
-                        $this->trans('commands.create.roles.messages.error'),
-                        $error
-                    )
-                );
-            }
         }
 
         return 0;

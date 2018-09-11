@@ -479,7 +479,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Perform a single update between minor versions.
  *
- * Hook hook_update_N() can only be used to update between minor versions of a
+ * hook_update_N() can only be used to update between minor versions of a
  * module. To upgrade between major versions of Drupal (for example, between
  * Drupal 7 and 8), use the @link migrate Migrate API @endlink instead.
  *
@@ -676,10 +676,9 @@ function hook_update_N(&$sandbox) {
  * These updates are executed after all hook_update_N() implementations. At this
  * stage Drupal is already fully repaired so you can use any API as you wish.
  *
- * NAME can be arbitrary machine names. In contrast to hook_update_N() the
- * alphanumeric naming of functions in the file is the only thing which ensures
- * the execution order of those functions. If update order is mandatory,
- * you should add numerical prefix to NAME or make it completely numerical.
+ * NAME can be arbitrary machine names. In contrast to hook_update_N() the order
+ * of functions in the file is the only thing which ensures the execution order
+ * of those functions.
  *
  * Drupal also ensures to not execute the same hook_post_update_NAME() function
  * twice.
@@ -933,7 +932,7 @@ function hook_requirements($phase) {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
       'value' => \Drupal::VERSION,
-      'severity' => REQUIREMENT_INFO,
+      'severity' => REQUIREMENT_INFO
     ];
   }
 

@@ -64,9 +64,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $field = FieldConfig::create($field_definition);
     $field->save();
 
-    // Enable translation for page nodes.
-    \Drupal::service('content_translation.manager')->setEnabled('node', 'page', TRUE);
-
     // Create and log in user.
     $web_user = $this->drupalCreateUser(
       [
@@ -109,8 +106,8 @@ class NodeRevisionsTest extends NodeTestBase {
       $node->untranslatable_string_field->value = $this->randomString();
       $node->setNewRevision();
 
-      // Edit the 1st and 2nd revision with a different user.
-      if ($i < 2) {
+      // Edit the 2nd revision with a different user.
+      if ($i == 1) {
         $editor = $this->drupalCreateUser();
         $node->setRevisionUserId($editor->id());
       }
@@ -174,15 +171,11 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
-      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
+      '%revision-date' => format_date($nodes[1]->getRevisionCreationTime())
     ]), 'Revision reverted.');
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
-    // Confirm the revision author is the user performing the revert.
-    $this->assertTrue($reverted_node->getRevisionUserId() == $this->loggedInUser->id(), 'Node revision author is user performing revert.');
-    // And that its not the revision author.
-    $this->assertTrue($reverted_node->getRevisionUserId() != $nodes[1]->getRevisionUserId(), 'Node revision author is not original revision author.');
 
     // Confirm that this is not the default version.
     $node = node_revision_load($node->getRevisionId());

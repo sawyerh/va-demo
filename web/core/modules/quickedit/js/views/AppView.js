@@ -63,7 +63,7 @@
 
           if (reload) {
             reload = false;
-            window.location.reload();
+            location.reload();
           }
           break;
       }
@@ -121,9 +121,11 @@
               } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
                   if (context && context.reason === 'mouseleave') {
                     accept = false;
-                  } else if (context && context.confirmed) {
+                  } else {
+                    if (context && context.confirmed) {
                       accept = true;
                     }
+                  }
                 }
           }
         }
@@ -287,16 +289,12 @@
         if (field === updatedField) {} else if (field.getViewMode() === updatedField.getViewMode()) {
             field.set('html', updatedField.get('html'));
           } else if (field.getViewMode() in htmlForOtherViewModes) {
-              field.set('html', htmlForOtherViewModes[field.getViewMode()], {
-                propagation: true
-              });
+              field.set('html', htmlForOtherViewModes[field.getViewMode()], { propagation: true });
             }
       });
     },
     rerenderedFieldToCandidate: function rerenderedFieldToCandidate(fieldModel) {
-      var activeEntity = Drupal.quickedit.collections.entities.findWhere({
-        isActive: true
-      });
+      var activeEntity = Drupal.quickedit.collections.entities.findWhere({ isActive: true });
 
       if (!activeEntity) {
         return;

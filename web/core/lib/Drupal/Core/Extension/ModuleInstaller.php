@@ -14,11 +14,6 @@ use Drupal\Core\Serialization\Yaml;
  *
  * It registers the module in config, installs its own configuration,
  * installs the schema, updates the Drupal kernel and more.
- *
- * We don't inject dependencies yet, as we would need to reload them after
- * each installation or uninstallation of a module.
- * https://www.drupal.org/project/drupal/issues/2350111 for example tries to
- * solve this dilemma.
  */
 class ModuleInstaller implements ModuleInstallerInterface {
 
@@ -98,8 +93,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Add dependencies to the list. The new modules will be processed as
-      // the foreach loop continues.
-      foreach ($module_list as $module => $value) {
+      // the while loop continues.
+      while (list($module) = each($module_list)) {
         foreach (array_keys($module_data[$module]->requires) as $dependency) {
           if (!isset($module_data[$dependency])) {
             // The dependency does not exist.
@@ -175,7 +170,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
             $module_filenames[$name] = $current_module_filenames[$name];
           }
           else {
-            $module_path = \Drupal::service('extension.list.module')->getPath($name);
+            $module_path = drupal_get_path('module', $name);
             $pathname = "$module_path/$name.info.yml";
             $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
             $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
@@ -191,10 +186,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->load($module);
         module_load_install($module);
 
-        // Clear the static cache of the "extension.list.module" service to pick
-        // up the new module, since it merges the installation status of modules
-        // into its statically cached list.
-        \Drupal::service('extension.list.module')->reset();
+        // Clear the static cache of system_rebuild_module_data() to pick up the
+        // new module, since it merges the installation status of modules into
+        // its statically cached list.
+        drupal_static_reset('system_rebuild_module_data');
 
         // Update the kernel to include it.
         $this->updateKernel($module_filenames);
@@ -309,11 +304,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
-      // If the container was rebuilt during hook_install() it might not have
-      // the 'router.route_provider.old' service.
-      if (\Drupal::hasService('router.route_provider.old')) {
-        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
-      }
+      \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
       if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
         // Rebuild routes after installing module. This is done here on top of
         // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
@@ -349,8 +340,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     if ($uninstall_dependents) {
       // Add dependent modules to the list. The new modules will be processed as
-      // the foreach loop continues.
-      foreach ($module_list as $module => $value) {
+      // the while loop continues.
+      $profile = drupal_get_profile();
+      while (list($module) = each($module_list)) {
         foreach (array_keys($module_data[$module]->required_by) as $dependent) {
           if (!isset($module_data[$dependent])) {
             // The dependent module does not exist.
@@ -358,7 +350,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
           }
 
           // Skip already uninstalled modules.
-          if (isset($installed_modules[$dependent]) && !isset($module_list[$dependent])) {
+          if (isset($installed_modules[$dependent]) && !isset($module_list[$dependent]) && $dependent != $profile) {
             $module_list[$dependent] = $dependent;
           }
         }
@@ -423,11 +415,16 @@ class ModuleInstaller implements ModuleInstallerInterface {
           $update_manager->uninstallEntityType($entity_type);
         }
         elseif ($entity_type->entityClassImplements(FieldableEntityInterface::CLASS)) {
-          // The module being uninstalled might have added new fields to
-          // existing entity types. This will add them to the deleted fields
-          // repository so their data will be purged on cron.
-          foreach ($entity_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
-            if ($storage_definition->getProvider() == $module) {
+          // The module being installed may be adding new fields to existing
+          // entity types. Field definitions for any entity type defined by
+          // the module are handled in the if branch.
+          $entity_type_id = $entity_type->id();
+          /** @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
+          $storage = $entity_manager->getStorage($entity_type_id);
+          foreach ($entity_manager->getFieldStorageDefinitions($entity_type_id) as $storage_definition) {
+            // @todo We need to trigger field purging here.
+            //   See https://www.drupal.org/node/2282119.
+            if ($storage_definition->getProvider() == $module && !$storage->countFieldData($storage_definition, TRUE)) {
               $update_manager->uninstallFieldStorageDefinition($storage_definition);
             }
           }
@@ -451,10 +448,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove any potential cache bins provided by the module.
       $this->removeCacheBins($module);
 
-      // Clear the static cache of the "extension.list.module" service to pick
-      // up the new module, since it merges the installation status of modules
-      // into its statically cached list.
-      \Drupal::service('extension.list.module')->reset();
+      // Clear the static cache of system_rebuild_module_data() to pick up the
+      // new module, since it merges the installation status of modules into
+      // its statically cached list.
+      drupal_static_reset('system_rebuild_module_data');
 
       // Clear plugin manager caches.
       \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();

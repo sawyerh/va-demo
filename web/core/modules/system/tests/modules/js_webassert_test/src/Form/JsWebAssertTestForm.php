@@ -8,8 +8,6 @@ use Drupal\Core\Url;
 
 /**
  * Test form for JSWebAssert JavaScriptTestBase.
- *
- * @internal
  */
 class JsWebAssertTestForm extends FormBase {
 
@@ -135,11 +133,10 @@ class JsWebAssertTestForm extends FormBase {
     $form['added_link'] = [
       '#title' => 'Added link',
       '#type' => 'link',
-      '#url' => Url::fromRoute('js_webassert_test.js_webassert_test_form'),
+      '#url' => Url::fromRoute('js_webassert_test.js_webassert_test_form')
     ];
     return $form;
   }
-
   /**
    * Ajax callback for the "Add field" button.
    */
@@ -179,6 +176,7 @@ class JsWebAssertTestForm extends FormBase {
 
     return $form;
   }
+
 
   /**
    * Ajax callback for the "Test waitForElementVisible" button.

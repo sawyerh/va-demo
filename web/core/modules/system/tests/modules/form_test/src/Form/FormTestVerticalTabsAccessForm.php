@@ -5,11 +5,6 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-/**
- * Builds a form to test vertical tabs access.
- *
- * @internal
- */
 class FormTestVerticalTabsAccessForm extends FormBase {
 
   /**
@@ -130,7 +125,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->messenger()->addStatus(t('The form submitted correctly.'));
+    drupal_set_message(t('The form submitted correctly.'));
   }
 
 }

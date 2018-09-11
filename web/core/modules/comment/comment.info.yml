@@ -5,5 +5,5 @@ package: Core
 version: VERSION
 core: 8.x
 dependencies:
-  - drupal:text
+  - text
 configure: comment.admin

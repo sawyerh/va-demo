@@ -142,42 +142,28 @@ class CommentsCommand extends Command
         $titleWords = $input->getOption('title-words')?:5;
         $timeRange = $input->getOption('time-range')?:31536000;
 
-        $result = $this->createCommentData->create(
+        $comments = $this->createCommentData->create(
             $nodeId,
             $limit,
             $titleWords,
             $timeRange
         );
 
-        if ($result['success']) {
+        $tableHeader = [
+            $this->trans('commands.create.comments.messages.node-id'),
+            $this->trans('commands.create.comments.messages.comment-id'),
+            $this->trans('commands.create.comments.messages.title'),
+            $this->trans('commands.create.comments.messages.created'),
+        ];
 
-            $tableHeader = [
-                $this->trans('commands.create.comments.messages.node-id'),
-                $this->trans('commands.create.comments.messages.comment-id'),
-                $this->trans('commands.create.comments.messages.title'),
-                $this->trans('commands.create.comments.messages.created'),
-            ];
+        $this->getIo()->table($tableHeader, $comments['success']);
 
-            $this->getIo()->table($tableHeader, $result['success']);
-
-            $this->getIo()->success(
-                sprintf(
-                    $this->trans('commands.create.comments.messages.created-comments'),
-                    count($result['success'])
-                )
-            );
-        }
-
-        if (isset($result['error'])) {
-            foreach ($result['error'] as $error) {
-                $this->getIo()->error(
-                    sprintf(
-                        $this->trans('commands.create.comments.messages.error'),
-                        $error
-                    )
-                );
-            }
-        }
+        $this->getIo()->success(
+            sprintf(
+                $this->trans('commands.create.comments.messages.created-comments'),
+                $limit
+            )
+        );
 
         return 0;
     }

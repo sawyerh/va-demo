@@ -10,8 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Remove form for book module.
- *
- * @internal
  */
 class BookRemoveForm extends ConfirmFormBase {
 
@@ -103,7 +101,7 @@ class BookRemoveForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($this->bookManager->checkNodeIsRemovable($this->node)) {
       $this->bookManager->deleteFromBook($this->node->id());
-      $this->messenger()->addStatus($this->t('The post has been removed from the book.'));
+      drupal_set_message($this->t('The post has been removed from the book.'));
     }
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

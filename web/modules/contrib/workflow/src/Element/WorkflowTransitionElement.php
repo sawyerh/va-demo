@@ -41,7 +41,7 @@ class WorkflowTransitionElement extends FormElement {
    * @param array $complete_form
    */
   public static function validateTransition(&$element, FormStateInterface $form_state, &$complete_form) {
-    workflow_debug(__FILE__, __FUNCTION__, __LINE__); // @todo D8-port: still test this snippet.
+    workflow_debug( __FILE__, __FUNCTION__, __LINE__); // @todo D8-port: still test this snippet.
   }
 
   /**
@@ -57,7 +57,7 @@ class WorkflowTransitionElement extends FormElement {
    *   The Workflow element
    */
   public static function processTransition(&$element, FormStateInterface $form_state, &$complete_form) {
-    workflow_debug(__FILE__, __FUNCTION__, __LINE__); // @todo D8-port: still test this snippet.
+    workflow_debug( __FILE__, __FUNCTION__, __LINE__); // @todo D8-port: still test this snippet.
     return self::transitionElement($element, $form_state, $complete_form);
   }
 
@@ -159,6 +159,13 @@ class WorkflowTransitionElement extends FormElement {
       $default_value = FALSE;
     }
 
+    // Fetch the form ID. This is unique for each entity, to allow multiple form per page (Views, etc.).
+    // Make it uniquer by adding the field name, or else the scheduling of
+    // multiple workflow_fields is not independent of each other.
+    // If we are indeed on a Transition form (so, not a Node Form with widget)
+    // then change the form id, too.
+    $form_id = self::getFormId();
+
     /*
      * Output: generate the element.
      */
@@ -223,7 +230,7 @@ class WorkflowTransitionElement extends FormElement {
 
     // Add a state formatter before the rest of the form,
     // when transition is scheduled or widget is hidden.
-    if ((!$show_widget) || $transition_is_scheduled || $transition->isExecuted()) {
+    if ( (!$show_widget) || $transition_is_scheduled || $transition->isExecuted()) {
       $element['workflow_current_state'] = workflow_state_formatter($entity, $field_name, $current_sid);
       // Set a proper weight, which works for Workflow Options in select list AND action buttons.
       $element['workflow_current_state']['#weight'] = -0.005;
@@ -309,14 +316,6 @@ class WorkflowTransitionElement extends FormElement {
         '#type' => 'container',
         '#tree' => TRUE,
       ];
-      // Define class for '#states' behaviour.
-      // Fetch the form ID. This is unique for each entity, to allow multiple form per page (Views, etc.).
-      // Make it uniquer by adding the field name, or else the scheduling of
-      // multiple workflow_fields is not independent of each other.
-      // If we are indeed on a Transition form (so, not a Node Form with widget)
-      // then change the form id, too.
-      $form_id = $form_state->getBuildInfo()['form_id'];
-      $class_identifier = Html::getClass('scheduled_' . Html::getUniqueId($form_id).'-'.$field_name);
       $element['workflow_scheduling']['scheduled'] = [
         '#type' => 'radios',
         '#title' => t('Schedule'),
@@ -327,7 +326,7 @@ class WorkflowTransitionElement extends FormElement {
         '#default_value' => $transition_is_scheduled ? '1' : '0',
         '#attributes' => [
           // 'id' => 'scheduled_' . $form_id,
-          'class' => [$class_identifier],
+          'class' => [Html::getClass('scheduled_' . $form_id)],
         ],
       ];
       $element['workflow_scheduling']['date_time'] = [
@@ -338,18 +337,18 @@ class WorkflowTransitionElement extends FormElement {
         '#suffix' => '</div>',
         '#states' => [
           //'visible' => array(':input[id="' . 'scheduled_' . $form_id . '"]' => array('value' => '1')),
-          'visible' => ['input.' . $class_identifier => ['value' => '1']],
+          'visible' => ['input.' . Html::getClass('scheduled_' . $form_id) => ['value' => '1']],
         ],
       ];
       $element['workflow_scheduling']['date_time']['workflow_scheduled_date'] = [
         '#type' => 'date',
         '#prefix' => t('At'),
-        '#default_value' => implode('-', [
+        '#default_value' => implode( '-', [
             'year' => date('Y', $timestamp),
             'month' => date('m', $timestamp),
             'day' => date('d', $timestamp),
           ]
-        ),
+        )
       ];
       $element['workflow_scheduling']['date_time']['workflow_scheduled_hour'] = [
         '#type' => 'textfield',
@@ -420,7 +419,7 @@ class WorkflowTransitionElement extends FormElement {
     return 'workflow_transition_form'; //@todo D8-port: add $form_id for widget and History tab.
   }
 
-  /**
+    /**
    * Implements ContentEntityForm::copyFormValuesToEntity(), and is called from:
    * - WorkflowTransitionForm::copyFormValuesToEntity()
    * - WorkflowDefaultWidget

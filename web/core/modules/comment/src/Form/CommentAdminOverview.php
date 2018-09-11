@@ -9,13 +9,11 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comments overview administration form.
- *
- * @internal
  */
 class CommentAdminOverview extends FormBase {
 
@@ -50,7 +48,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * The tempstore factory.
    *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -63,7 +61,7 @@ class CommentAdminOverview extends FormBase {
    *   The date formatter service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler, PrivateTempStoreFactory $temp_store_factory) {
@@ -82,7 +80,7 @@ class CommentAdminOverview extends FormBase {
       $container->get('entity_type.manager'),
       $container->get('date.formatter'),
       $container->get('module_handler'),
-      $container->get('tempstore.private')
+      $container->get('user.private_tempstore')
     );
   }
 
@@ -279,7 +277,7 @@ class CommentAdminOverview extends FormBase {
         }
         $comment->save();
       }
-      $this->messenger()->addStatus($this->t('The update has been performed.'));
+      drupal_set_message($this->t('The update has been performed.'));
       $form_state->setRedirect('comment.admin');
     }
     else {
@@ -290,9 +288,9 @@ class CommentAdminOverview extends FormBase {
         $info[$comment->id()][$langcode] = $langcode;
       }
       $this->tempStoreFactory
-        ->get('entity_delete_multiple_confirm')
-        ->set($this->currentUser()->id() . ':comment', $info);
-      $form_state->setRedirect('entity.comment.delete_multiple_form');
+        ->get('comment_multiple_delete_confirm')
+        ->set($this->currentUser()->id(), $info);
+      $form_state->setRedirect('comment.multiple_delete_confirm');
     }
   }
 

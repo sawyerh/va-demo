@@ -26,12 +26,13 @@
  * @return {function}
  *   The debounced function.
  */
-Drupal.debounce = function(func, wait, immediate) {
+Drupal.debounce = function (func, wait, immediate) {
   let timeout;
   let result;
-  return function(...args) {
+  return function () {
     const context = this;
-    const later = function() {
+    const args = arguments;
+    const later = function () {
       timeout = null;
       if (!immediate) {
         result = func.apply(context, args);

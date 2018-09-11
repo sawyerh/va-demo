@@ -12,28 +12,21 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *
    * @var string
    */
-  protected $uri;
+  private $_uri;
 
   /**
    * The Gettext PO header.
    *
    * @var \Drupal\Component\Gettext\PoHeader
    */
-  protected $header;
+  private $_header;
 
   /**
    * File handle of the current PO stream.
    *
    * @var resource
    */
-  protected $fd;
-
-  /**
-   * The language code of this writer.
-   *
-   * @var string
-   */
-  protected $langcode;
+  private $_fd;
 
   /**
    * Gets the PO header of the current stream.
@@ -42,7 +35,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The Gettext PO header.
    */
   public function getHeader() {
-    return $this->header;
+    return $this->_header;
   }
 
   /**
@@ -52,7 +45,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The Gettext PO header to set.
    */
   public function setHeader(PoHeader $header) {
-    $this->header = $header;
+    $this->_header = $header;
   }
 
   /**
@@ -62,7 +55,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The language code.
    */
   public function getLangcode() {
-    return $this->langcode;
+    return $this->_langcode;
   }
 
   /**
@@ -72,7 +65,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   The language code.
    */
   public function setLangcode($langcode) {
-    $this->langcode = $langcode;
+    $this->_langcode = $langcode;
   }
 
   /**
@@ -80,7 +73,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    */
   public function open() {
     // Open in write mode. Will overwrite the stream if it already exists.
-    $this->fd = fopen($this->getURI(), 'w');
+    $this->_fd = fopen($this->getURI(), 'w');
     // Write the header at the start.
     $this->writeHeader();
   }
@@ -88,15 +81,15 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   /**
    * Implements Drupal\Component\Gettext\PoStreamInterface::close().
    *
-   * @throws \Exception
+   * @throws Exception
    *   If the stream is not open.
    */
   public function close() {
-    if ($this->fd) {
-      fclose($this->fd);
+    if ($this->_fd) {
+      fclose($this->_fd);
     }
     else {
-      throw new \Exception('Cannot close stream that is not open.');
+      throw new Exception('Cannot close stream that is not open.');
     }
   }
 
@@ -107,13 +100,13 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    *   Piece of string to write to the stream. If the value is not directly a
    *   string, casting will happen in writing.
    *
-   * @throws \Exception
+   * @throws Exception
    *   If writing the data is not possible.
    */
   private function write($data) {
-    $result = fwrite($this->fd, $data);
-    if ($result === FALSE || $result != strlen($data)) {
-      throw new \Exception('Unable to write data: ' . substr($data, 0, 20));
+    $result = fwrite($this->_fd, $data);
+    if ($result === FALSE) {
+      throw new Exception('Unable to write data: ' . substr($data, 0, 20));
     }
   }
 
@@ -121,7 +114,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    * Write the PO header to the stream.
    */
   private function writeHeader() {
-    $this->write($this->header);
+    $this->write($this->_header);
   }
 
   /**
@@ -144,21 +137,21 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   /**
    * Implements Drupal\Component\Gettext\PoStreamInterface::getURI().
    *
-   * @throws \Exception
+   * @throws Exception
    *   If the URI is not set.
    */
   public function getURI() {
-    if (empty($this->uri)) {
-      throw new \Exception('No URI set.');
+    if (empty($this->_uri)) {
+      throw new Exception('No URI set.');
     }
-    return $this->uri;
+    return $this->_uri;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setURI($uri) {
-    $this->uri = $uri;
+    $this->_uri = $uri;
   }
 
 }

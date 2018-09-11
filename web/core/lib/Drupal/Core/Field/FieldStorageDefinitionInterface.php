@@ -97,11 +97,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
   public function setTranslatable($translatable);
 
   /**
-   * Returns whether the field storage is revisionable.
-   *
-   * Note that if the entity type is revisionable and the field storage has a
-   * cardinality higher than 1, the field storage is considered revisionable
-   * by default.
+   * Returns whether the field is revisionable.
    *
    * @return bool
    *   TRUE if the field is revisionable.
@@ -337,18 +333,10 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
   public function isBaseField();
 
   /**
-   * Returns a unique identifier for the field storage.
+   * Returns a unique identifier for the field.
    *
    * @return string
    */
   public function getUniqueStorageIdentifier();
-
-  /**
-   * Returns whether the field is deleted or not.
-   *
-   * @return bool
-   *   TRUE if the field is deleted, FALSE otherwise.
-   */
-  public function isDeleted();
 
 }

@@ -14,7 +14,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
-use ReflectionException;
 
 /**
  * Automatically wires arguments of a given function from inside the container by using type-hitns.
@@ -73,18 +72,6 @@ final class ArgumentAutowirer
      */
     private function isArgumentWireable(array $arguments, $index, ReflectionParameter $parameter)
     {
-        if (isset($arguments[$index]) || array_key_exists($index, $arguments)) {
-            return false;
-        }
-
-        if (isset($arguments[$parameter->getName()]) || array_key_exists($parameter->getName(), $arguments)) {
-            return false;
-        }
-
-        try {
-            return (bool) $parameter->getClass();
-        } catch (ReflectionException $e) {
-            return false;
-        }
+        return !isset($arguments[$index]) && !isset($arguments[$parameter->getName()]) && $parameter->getClass();
     }
 }

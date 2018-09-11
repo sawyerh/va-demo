@@ -45,10 +45,12 @@ class WorkflowTransitionForm extends ContentEntityForm {
     // $entity_type = $transition->getTargetEntityTypeId();
     // $entity_id = $transition->getTargetEntityId();;
 
-    $suffix = 'form';
     // Emulate nodeForm convention.
     if ($transition->id()) {
       $suffix = 'edit_form';
+    }
+    else {
+      $suffix = 'form';
     }
     $form_id = implode('_', ['workflow_transition', $field_name, $suffix]);
     $form_id = Html::getUniqueId($form_id);

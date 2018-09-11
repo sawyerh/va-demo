@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form handler for the shortcut entity forms.
- *
- * @internal
  */
 class ShortcutForm extends ContentEntityForm {
 
@@ -42,7 +40,7 @@ class ShortcutForm extends ContentEntityForm {
     else {
       $message = $this->t('Added a shortcut for %title.', ['%title' => $view_link]);
     }
-    $this->messenger()->addStatus($message);
+    drupal_set_message($message);
 
     $form_state->setRedirect(
       'entity.shortcut_set.customize_form',

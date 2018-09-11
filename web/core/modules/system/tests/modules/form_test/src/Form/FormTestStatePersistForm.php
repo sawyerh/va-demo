@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form constructor for testing form state persistence.
- *
- * @internal
  */
 class FormTestStatePersistForm extends FormBase {
 
@@ -42,7 +40,7 @@ class FormTestStatePersistForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->messenger()->addStatus($form_state->get('value'));
+    drupal_set_message($form_state->get('value'));
     $form_state->setRebuild();
   }
 

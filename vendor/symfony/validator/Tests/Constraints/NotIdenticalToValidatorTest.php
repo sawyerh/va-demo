@@ -53,16 +53,6 @@ class NotIdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function provideValidComparisonsToPropertyPath()
-    {
-        return array(
-            array(0),
-        );
-    }
-
     public function provideAllInvalidComparisons()
     {
         $this->setDefaultTimezone('UTC');

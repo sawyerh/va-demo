@@ -14,9 +14,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *     "text_long" = "text_long",
  *     "text_with_summary" = "text_with_summary"
  *   },
- *   core = {6},
- *   source_module = "text",
- *   destination_module = "text",
+ *   core = {6}
  * )
  */
 class TextField extends FieldPluginBase {
@@ -44,7 +42,7 @@ class TextField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $field_info) {
+  public function processFieldValues(MigrationInterface $migration, $field_name, $field_info) {
     $widget_type = isset($field_info['widget_type']) ? $field_info['widget_type'] : $field_info['widget']['type'];
 
     if ($widget_type == 'optionwidgets_onoff') {

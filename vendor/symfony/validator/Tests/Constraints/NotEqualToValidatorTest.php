@@ -53,16 +53,6 @@ class NotEqualToValidatorTest extends AbstractComparisonValidatorTestCase
     /**
      * {@inheritdoc}
      */
-    public function provideValidComparisonsToPropertyPath()
-    {
-        return array(
-            array(0),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function provideInvalidComparisons()
     {
         return array(

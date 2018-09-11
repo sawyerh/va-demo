@@ -11,8 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure maintenance settings for this site.
- *
- * @internal
  */
 class SiteMaintenanceModeForm extends ConfigFormBase {
 
@@ -56,7 +54,6 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
       $container->get('user.permissions')
     );
   }
-
   /**
    * {@inheritdoc}
    */

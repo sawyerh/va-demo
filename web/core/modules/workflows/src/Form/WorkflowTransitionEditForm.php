@@ -14,8 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class WorkflowTransitionEditForm.
- *
- * @internal
  */
 class WorkflowTransitionEditForm extends EntityForm {
 
@@ -80,9 +78,10 @@ class WorkflowTransitionEditForm extends EntityForm {
 
     $form['label'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Transition label'),
+      '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $transition->label(),
+      '#description' => $this->t('Label for the transition.'),
       '#required' => TRUE,
     ];
 
@@ -198,7 +197,7 @@ class WorkflowTransitionEditForm extends EntityForm {
     }
 
     $workflow->save();
-    $this->messenger()->addStatus($this->t('Saved %label transition.', [
+    drupal_set_message($this->t('Saved %label transition.', [
       '%label' => $workflow->getTypePlugin()->getTransition($this->transitionId)->label(),
     ]));
     $form_state->setRedirectUrl($workflow->toUrl('edit-form'));
@@ -224,8 +223,8 @@ class WorkflowTransitionEditForm extends EntityForm {
       ],
       '#url' => Url::fromRoute('entity.workflow.delete_transition_form', [
         'workflow' => $this->entity->id(),
-        'workflow_transition' => $this->transitionId,
-      ]),
+        'workflow_transition' => $this->transitionId
+      ])
     ];
 
     return $actions;

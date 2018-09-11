@@ -103,12 +103,6 @@ class InitCommand extends Command
                 $this->trans('commands.init.options.destination')
             )
             ->addOption(
-                'site',
-                null,
-                InputOption::VALUE_NONE,
-                $this->trans('commands.init.options.site')
-            )
-            ->addOption(
                 'override',
                 null,
                 InputOption::VALUE_NONE,
@@ -128,13 +122,8 @@ class InitCommand extends Command
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $destination = $input->getOption('destination');
-        $site = $input->getOption('site');
         $autocomplete = $input->getOption('autocomplete');
         $configuration = $this->configurationManager->getConfiguration();
-
-        if ($site && $this->appRoot && $this->consoleRoot) {
-            $destination = $this->consoleRoot . '/console/';
-        }
 
         if (!$destination) {
             if ($this->appRoot && $this->consoleRoot) {
@@ -201,14 +190,8 @@ class InitCommand extends Command
     {
         $copiedFiles = [];
         $destination = $input->getOption('destination');
-        $site = $input->getOption('site');
         $autocomplete = $input->getOption('autocomplete');
         $override = $input->getOption('override');
-
-        if ($site && $this->appRoot && $this->consoleRoot) {
-            $destination = $this->consoleRoot . '/console/';
-        }
-
         if (!$destination) {
             $destination = $this->configurationManager->getConsoleDirectory();
         }

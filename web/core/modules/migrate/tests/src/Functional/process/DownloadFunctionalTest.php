@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate\Functional\process;
 
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -41,7 +42,7 @@ class DownloadFunctionalTest extends BrowserTestBase {
         'uri' => [
           'plugin' => 'download',
           'source' => ['url', 'uri'],
-        ],
+        ]
       ],
       'destination' => [
         'plugin' => 'entity:file',
@@ -50,7 +51,7 @@ class DownloadFunctionalTest extends BrowserTestBase {
 
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
-    $executable = new MigrateExecutable($migration);
+    $executable = new MigrateExecutable($migration, new MigrateMessage());
     $result = $executable->import();
 
     // Check that the migration has completed.

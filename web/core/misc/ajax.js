@@ -10,37 +10,55 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Drupal.behaviors.AJAX = {
     attach: function attach(context, settings) {
       function loadAjaxBehavior(base) {
-        var elementSettings = settings.ajax[base];
-        if (typeof elementSettings.selector === 'undefined') {
-          elementSettings.selector = '#' + base;
+        var element_settings = settings.ajax[base];
+        if (typeof element_settings.selector === 'undefined') {
+          element_settings.selector = '#' + base;
         }
-        $(elementSettings.selector).once('drupal-ajax').each(function () {
-          elementSettings.element = this;
-          elementSettings.base = base;
-          Drupal.ajax(elementSettings);
+        $(element_settings.selector).once('drupal-ajax').each(function () {
+          element_settings.element = this;
+          element_settings.base = base;
+          Drupal.ajax(element_settings);
         });
       }
 
-      Object.keys(settings.ajax || {}).forEach(function (base) {
-        return loadAjaxBehavior(base);
+      for (var base in settings.ajax) {
+        if (settings.ajax.hasOwnProperty(base)) {
+          loadAjaxBehavior(base);
+        }
+      }
+
+      $('.use-ajax').once('ajax').each(function () {
+        var element_settings = {};
+
+        element_settings.progress = { type: 'throbber' };
+
+        var href = $(this).attr('href');
+        if (href) {
+          element_settings.url = href;
+          element_settings.event = 'click';
+        }
+        element_settings.dialogType = $(this).data('dialog-type');
+        element_settings.dialogRenderer = $(this).data('dialog-renderer');
+        element_settings.dialog = $(this).data('dialog-options');
+        element_settings.base = $(this).attr('id');
+        element_settings.element = this;
+        Drupal.ajax(element_settings);
       });
 
-      Drupal.ajax.bindAjaxLinks(document.body);
-
       $('.use-ajax-submit').once('ajax').each(function () {
-        var elementSettings = {};
+        var element_settings = {};
 
-        elementSettings.url = $(this.form).attr('action');
+        element_settings.url = $(this.form).attr('action');
 
-        elementSettings.setClick = true;
+        element_settings.setClick = true;
 
-        elementSettings.event = 'click';
+        element_settings.event = 'click';
 
-        elementSettings.progress = { type: 'throbber' };
-        elementSettings.base = $(this).attr('id');
-        elementSettings.element = this;
+        element_settings.progress = { type: 'throbber' };
+        element_settings.base = $(this).attr('id');
+        element_settings.element = this;
 
-        Drupal.ajax(elementSettings);
+        Drupal.ajax(element_settings);
       });
     },
     detach: function detach(context, settings, trigger) {
@@ -55,40 +73,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   Drupal.AjaxError = function (xmlhttp, uri, customMessage) {
     var statusCode = void 0;
     var statusText = void 0;
+    var pathText = void 0;
     var responseText = void 0;
+    var readyStateText = void 0;
     if (xmlhttp.status) {
       statusCode = '\n' + Drupal.t('An AJAX HTTP error occurred.') + '\n' + Drupal.t('HTTP Result Code: !status', { '!status': xmlhttp.status });
     } else {
       statusCode = '\n' + Drupal.t('An AJAX HTTP request terminated abnormally.');
     }
     statusCode += '\n' + Drupal.t('Debugging information follows.');
-    var pathText = '\n' + Drupal.t('Path: !uri', { '!uri': uri });
+    pathText = '\n' + Drupal.t('Path: !uri', { '!uri': uri });
     statusText = '';
 
     try {
-      statusText = '\n' + Drupal.t('StatusText: !statusText', {
-        '!statusText': $.trim(xmlhttp.statusText)
-      });
+      statusText = '\n' + Drupal.t('StatusText: !statusText', { '!statusText': $.trim(xmlhttp.statusText) });
     } catch (e) {}
 
     responseText = '';
 
     try {
-      responseText = '\n' + Drupal.t('ResponseText: !responseText', {
-        '!responseText': $.trim(xmlhttp.responseText)
-      });
+      responseText = '\n' + Drupal.t('ResponseText: !responseText', { '!responseText': $.trim(xmlhttp.responseText) });
     } catch (e) {}
 
     responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, '');
     responseText = responseText.replace(/[\n]+\s+/g, '\n');
 
-    var readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', {
-      '!readyState': xmlhttp.readyState
-    }) : '';
+    readyStateText = xmlhttp.status === 0 ? '\n' + Drupal.t('ReadyState: !readyState', { '!readyState': xmlhttp.readyState }) : '';
 
-    customMessage = customMessage ? '\n' + Drupal.t('CustomMessage: !customMessage', {
-      '!customMessage': customMessage
-    }) : '';
+    customMessage = customMessage ? '\n' + Drupal.t('CustomMessage: !customMessage', { '!customMessage': customMessage }) : '';
 
     this.message = statusCode + pathText + statusText + customMessage + responseText + readyStateText;
 
@@ -127,29 +139,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     });
   };
 
-  Drupal.ajax.bindAjaxLinks = function (element) {
-    $(element).find('.use-ajax').once('ajax').each(function (i, ajaxLink) {
-      var $linkElement = $(ajaxLink);
-
-      var elementSettings = {
-        progress: { type: 'throbber' },
-        dialogType: $linkElement.data('dialog-type'),
-        dialog: $linkElement.data('dialog-options'),
-        dialogRenderer: $linkElement.data('dialog-renderer'),
-        base: $linkElement.attr('id'),
-        element: ajaxLink
-      };
-      var href = $linkElement.attr('href');
-
-      if (href) {
-        elementSettings.url = href;
-        elementSettings.event = 'click';
-      }
-      Drupal.ajax(elementSettings);
-    });
-  };
-
-  Drupal.Ajax = function (base, element, elementSettings) {
+  Drupal.Ajax = function (base, element, element_settings) {
     var defaults = {
       event: element ? 'mousedown' : null,
       keypress: true,
@@ -166,7 +156,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
     };
 
-    $.extend(this, defaults, elementSettings);
+    $.extend(this, defaults, element_settings);
 
     this.commands = new Drupal.AjaxCommands();
 
@@ -178,9 +168,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     this.element = element;
 
-    this.element_settings = elementSettings;
-
-    this.elementSettings = elementSettings;
+    this.element_settings = element_settings;
 
     if (this.element && this.element.form) {
       this.$form = $(this.element.form);
@@ -197,7 +185,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     var originalUrl = this.url;
 
-    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
+    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/g, '/ajax$1');
 
     if (drupalSettings.ajaxTrustedUrl[originalUrl]) {
       drupalSettings.ajaxTrustedUrl[this.url] = true;
@@ -208,12 +196,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     ajax.options = {
       url: ajax.url,
       data: ajax.submit,
-      beforeSerialize: function beforeSerialize(elementSettings, options) {
-        return ajax.beforeSerialize(elementSettings, options);
+      beforeSerialize: function beforeSerialize(element_settings, options) {
+        return ajax.beforeSerialize(element_settings, options);
       },
-      beforeSubmit: function beforeSubmit(formValues, elementSettings, options) {
+      beforeSubmit: function beforeSubmit(form_values, element_settings, options) {
         ajax.ajaxing = true;
-        return ajax.beforeSubmit(formValues, elementSettings, options);
+        return ajax.beforeSubmit(form_values, element_settings, options);
       },
       beforeSend: function beforeSend(xmlhttprequest, options) {
         ajax.ajaxing = true;
@@ -244,8 +232,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       type: 'POST'
     };
 
-    if (elementSettings.dialog) {
-      ajax.options.data.dialogOptions = elementSettings.dialog;
+    if (element_settings.dialog) {
+      ajax.options.data.dialogOptions = element_settings.dialog;
     }
 
     if (ajax.options.url.indexOf('?') === -1) {
@@ -254,29 +242,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       ajax.options.url += '&';
     }
 
-    var wrapper = 'drupal_' + (elementSettings.dialogType || 'ajax');
-    if (elementSettings.dialogRenderer) {
-      wrapper += '.' + elementSettings.dialogRenderer;
+    var wrapper = 'drupal_' + (element_settings.dialogType || 'ajax');
+    if (element_settings.dialogRenderer) {
+      wrapper += '.' + element_settings.dialogRenderer;
     }
     ajax.options.url += Drupal.ajax.WRAPPER_FORMAT + '=' + wrapper;
 
-    $(ajax.element).on(elementSettings.event, function (event) {
+    $(ajax.element).on(element_settings.event, function (event) {
       if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {
-        throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {
-          '!url': ajax.url
-        }));
+        throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', { '!url': ajax.url }));
       }
       return ajax.eventResponse(this, event);
     });
 
-    if (elementSettings.keypress) {
+    if (element_settings.keypress) {
       $(ajax.element).on('keypress', function (event) {
         return ajax.keypressResponse(this, event);
       });
     }
 
-    if (elementSettings.prevent) {
-      $(ajax.element).on(elementSettings.prevent, false);
+    if (element_settings.prevent) {
+      $(ajax.element).on(element_settings.prevent, false);
     }
   };
 
@@ -307,7 +293,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     if (event.which === 13 || event.which === 32 && element.type !== 'text' && element.type !== 'textarea' && element.type !== 'tel' && element.type !== 'number') {
       event.preventDefault();
       event.stopPropagation();
-      $(element).trigger(ajax.elementSettings.event);
+      $(element).trigger(ajax.element_settings.event);
     }
   };
 
@@ -352,7 +338,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     options.data['ajax_page_state[libraries]'] = pageState.libraries;
   };
 
-  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, options) {};
+  Drupal.Ajax.prototype.beforeSubmit = function (form_values, element, options) {};
 
   Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
     if (this.$form) {
@@ -378,21 +364,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
   };
 
-  Drupal.theme.ajaxProgressThrobber = function (message) {
-    var messageMarkup = typeof message === 'string' ? Drupal.theme('ajaxProgressMessage', message) : '';
-    var throbber = '<div class="throbber">&nbsp;</div>';
-
-    return '<div class="ajax-progress ajax-progress-throbber">' + throbber + messageMarkup + '</div>';
-  };
-
-  Drupal.theme.ajaxProgressIndicatorFullscreen = function () {
-    return '<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>';
-  };
-
-  Drupal.theme.ajaxProgressMessage = function (message) {
-    return '<div class="message">' + message + '</div>';
-  };
-
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
     var progressBar = new Drupal.ProgressBar('ajax-progress-' + this.element.id, $.noop, this.progress.method, $.noop);
     if (this.progress.message) {
@@ -407,18 +378,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   };
 
   Drupal.Ajax.prototype.setProgressIndicatorThrobber = function () {
-    this.progress.element = $(Drupal.theme('ajaxProgressThrobber', this.progress.message));
+    this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+    if (this.progress.message) {
+      this.progress.element.find('.throbber').after('<div class="message">' + this.progress.message + '</div>');
+    }
     $(this.element).after(this.progress.element);
   };
 
   Drupal.Ajax.prototype.setProgressIndicatorFullscreen = function () {
-    this.progress.element = $(Drupal.theme('ajaxProgressIndicatorFullscreen'));
+    this.progress.element = $('<div class="ajax-progress ajax-progress-fullscreen">&nbsp;</div>');
     $('body').after(this.progress.element);
   };
 
   Drupal.Ajax.prototype.success = function (response, status) {
-    var _this = this;
-
     if (this.progress.element) {
       $(this.progress.element).remove();
     }
@@ -430,19 +402,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
 
     var focusChanged = false;
-    Object.keys(response || {}).forEach(function (i) {
-      if (response[i].command && _this.commands[response[i].command]) {
-        _this.commands[response[i].command](_this, response[i], status);
+    for (var i in response) {
+      if (response.hasOwnProperty(i) && response[i].command && this.commands[response[i].command]) {
+        this.commands[response[i].command](this, response[i], status);
         if (response[i].command === 'invoke' && response[i].method === 'focus') {
           focusChanged = true;
         }
       }
-    });
+    }
 
     if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
       var target = false;
 
-      for (var n = elementParents.length - 1; !target && n >= 0; n--) {
+      for (var n = elementParents.length - 1; !target && n > 0; n--) {
         target = document.querySelector('[data-drupal-selector="' + elementParents[n].getAttribute('data-drupal-selector') + '"]');
       }
 
@@ -500,28 +472,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     throw new Drupal.AjaxError(xmlhttprequest, uri, customMessage);
   };
 
-  Drupal.theme.ajaxWrapperNewContent = function ($newContent, ajax, response) {
-    return (response.effect || ajax.effect) !== 'none' && $newContent.filter(function (i) {
-      return !($newContent[i].nodeName === '#comment' || $newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent));
-    }).length > 1 ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent) : $newContent;
-  };
-
-  Drupal.theme.ajaxWrapperMultipleRootElements = function ($elements) {
-    return $('<div></div>').append($elements);
-  };
-
   Drupal.AjaxCommands = function () {};
   Drupal.AjaxCommands.prototype = {
-    insert: function insert(ajax, response) {
+    insert: function insert(ajax, response, status) {
       var $wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
       var method = response.method || ajax.method;
       var effect = ajax.getEffect(response);
+      var settings = void 0;
 
-      var settings = response.settings || ajax.settings || drupalSettings;
+      var $new_content_wrapped = $('<div></div>').html(response.data);
+      var $new_content = $new_content_wrapped.contents();
 
-      var $newContent = $($.parseHTML(response.data, document, true));
-
-      $newContent = Drupal.theme('ajaxWrapperNewContent', $newContent, ajax, response);
+      if ($new_content.length !== 1 || $new_content.get(0).nodeType !== 1) {
+        $new_content = $new_content_wrapped;
+      }
 
       switch (method) {
         case 'html':
@@ -529,33 +493,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         case 'replaceAll':
         case 'empty':
         case 'remove':
+          settings = response.settings || ajax.settings || drupalSettings;
           Drupal.detachBehaviors($wrapper.get(0), settings);
-          break;
-        default:
-          break;
       }
 
-      $wrapper[method]($newContent);
+      $wrapper[method]($new_content);
 
       if (effect.showEffect !== 'show') {
-        $newContent.hide();
+        $new_content.hide();
       }
 
-      var $ajaxNewContent = $newContent.find('.ajax-new-content');
-      if ($ajaxNewContent.length) {
-        $ajaxNewContent.hide();
-        $newContent.show();
-        $ajaxNewContent[effect.showEffect](effect.showSpeed);
+      if ($new_content.find('.ajax-new-content').length > 0) {
+        $new_content.find('.ajax-new-content').hide();
+        $new_content.show();
+        $new_content.find('.ajax-new-content')[effect.showEffect](effect.showSpeed);
       } else if (effect.showEffect !== 'show') {
-        $newContent[effect.showEffect](effect.showSpeed);
+        $new_content[effect.showEffect](effect.showSpeed);
       }
 
-      if ($newContent.parents('html').length) {
-        $newContent.each(function (index, element) {
-          if (element.nodeType === Node.ELEMENT_NODE) {
-            Drupal.attachBehaviors(element, settings);
-          }
-        });
+      if ($new_content.parents('html').length > 0) {
+        settings = response.settings || ajax.settings || drupalSettings;
+        Drupal.attachBehaviors($new_content.get(0), settings);
       }
     },
     remove: function remove(ajax, response, status) {
@@ -620,7 +578,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       $('head').prepend(response.data);
 
       var match = void 0;
-      var importMatch = /^@import url\("(.*)"\);$/gim;
+      var importMatch = /^@import url\("(.*)"\);$/igm;
       if (document.styleSheets[0].addImport && importMatch.test(response.data)) {
         importMatch.lastIndex = 0;
         do {

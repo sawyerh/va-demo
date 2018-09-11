@@ -4,7 +4,7 @@
 *
 * @license http://opensource.org/licenses/MIT
 * @link https://github.com/thephpleague/csv/
-* @version 9.1.4
+* @version 9.1.2
 * @package League.csv
 *
 * For the full copyright and license information, please view the LICENSE
@@ -89,7 +89,7 @@ class Writer extends AbstractCsv
     /**
      * Adds multiple records to the CSV document
      *
-     * @see Writer::insertOne
+     * a simple wrapper method around insertOne
      *
      * @param Traversable|array $records a multidimensional array or a Traversable object
      *
@@ -97,7 +97,7 @@ class Writer extends AbstractCsv
      */
     public function insertAll($records): int
     {
-        if (!\is_iterable($records)) {
+        if (!is_iterable($records)) {
             throw new TypeError(sprintf('%s() expects argument passed to be iterable, %s given', __METHOD__, gettype($records)));
         }
 
@@ -115,10 +115,7 @@ class Writer extends AbstractCsv
     /**
      * Adds a single record to a CSV document
      *
-     * @param array $record An array containing
-     *                      - scalar types values,
-     *                      - NULL values,
-     *                      - or objects implementing the __toString() method.
+     * @param string[] $record an array
      *
      * @throws CannotInsertRecord If the record can not be inserted
      *
@@ -129,29 +126,20 @@ class Writer extends AbstractCsv
         $record = array_reduce($this->formatters, [$this, 'formatRecord'], $record);
         $this->validateRecord($record);
         $bytes = $this->document->fputcsv($record, $this->delimiter, $this->enclosure, $this->escape);
-        if ('' !== (string) $bytes) {
-            return $bytes + $this->consolidate();
+        if (!$bytes) {
+            throw CannotInsertRecord::triggerOnInsertion($record);
         }
 
-        throw CannotInsertRecord::triggerOnInsertion($record);
+        return $bytes + $this->consolidate();
     }
 
     /**
      * Format a record
      *
-     * The returned array must contain
-     *   - scalar types values,
-     *   - NULL values,
-     *   - or objects implementing the __toString() method.
-     *
-     * @param array $record An array containing
-     *                      - scalar types values,
-     *                      - NULL values,
-     *                      - implementing the __toString() method.
-     *
+     * @param string[] $record
      * @param callable $formatter
      *
-     * @return array
+     * @return string[]
      */
     protected function formatRecord(array $record, callable $formatter): array
     {
@@ -161,10 +149,7 @@ class Writer extends AbstractCsv
     /**
      * Validate a record
      *
-     * @param array $record An array containing
-     *                      - scalar types values,
-     *                      - NULL values
-     *                      - or objects implementing __toString() method.
+     * @param string[] $record
      *
      * @throws CannotInsertRecord If the validation failed
      */
@@ -265,7 +250,7 @@ class Writer extends AbstractCsv
             throw new TypeError(sprintf(__METHOD__.'() expects 1 Argument to be null or an integer %s given', gettype($threshold)));
         }
 
-        if (null !== $threshold && 1 > $threshold) {
+        if (null !== $threshold && 1 >= $threshold) {
             throw new Exception(__METHOD__.'() expects 1 Argument to be null or a valid integer greater or equal to 1');
         }
 

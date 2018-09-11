@@ -3,7 +3,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -11,23 +11,20 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Url;
-use Drupal\Core\TempStore\SharedTempStoreFactory;
+use Drupal\user\SharedTempStoreFactory;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Form controller for the Views edit form.
- *
- * @internal
  */
 class ViewEditForm extends ViewFormBase {
 
   /**
    * The views temp store.
    *
-   * @var \Drupal\Core\TempStore\SharedTempStore
+   * @var \Drupal\user\SharedTempStore
    */
   protected $tempStore;
 
@@ -55,7 +52,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Constructs a new ViewEditForm object.
    *
-   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
+   * @param \Drupal\user\SharedTempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack object.
@@ -76,7 +73,7 @@ class ViewEditForm extends ViewFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('tempstore.shared'),
+      $container->get('user.shared_tempstore'),
       $container->get('request_stack'),
       $container->get('date.formatter'),
       $container->get('element_info')
@@ -325,7 +322,7 @@ class ViewEditForm extends ViewFormBase {
 
     $view->save();
 
-    $this->messenger()->addStatus($this->t('The view %name has been saved.', ['%name' => $view->label()]));
+    drupal_set_message($this->t('The view %name has been saved.', ['%name' => $view->label()]));
 
     // Remove this view from cache so we can edit it properly.
     $this->tempStore->delete($view->id());
@@ -419,25 +416,15 @@ class ViewEditForm extends ViewFormBase {
         // path.
         elseif ($view->status() && $view->getExecutable()->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->getExecutable()->displayHandlers->get($display['id'])->getPath();
-
           if ($path && (strpos($path, '%') === FALSE)) {
-            // Wrap this in a try/catch as trying to generate links to some
-            // routes may throw a NotAcceptableHttpException if they do not
-            // respond to HTML, such as RESTExports.
-            try {
-              if (!parse_url($path, PHP_URL_SCHEME)) {
-                // @todo Views should expect and store a leading /. See:
-                //   https://www.drupal.org/node/2423913
-                $url = Url::fromUserInput('/' . ltrim($path, '/'));
-              }
-              else {
-                $url = Url::fromUri("base:$path");
-              }
+            if (!parse_url($path, PHP_URL_SCHEME)) {
+              // @todo Views should expect and store a leading /. See:
+              //   https://www.drupal.org/node/2423913
+              $url = Url::fromUserInput('/' . ltrim($path, '/'));
             }
-            catch (NotAcceptableHttpException $e) {
-              $url = '/' . $path;
+            else {
+              $url = Url::fromUri("base:$path");
             }
-
             $build['top']['actions']['path'] = [
               '#type' => 'link',
               '#title' => $this->t('View @display_title', ['@display_title' => $display_title]),
@@ -1098,7 +1085,7 @@ class ViewEditForm extends ViewFormBase {
       $build['fields'][$id]['#class'][] = Html::cleanCssIdentifier($display['id'] . '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(new FormattableMarkup('<span class="label">@text</span>', ['@text' => $this->t('Aggregation settings')]), new Url('views_ui.form_handler_group', [
+        $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', ['@text' => $this->t('Aggregation settings')]), new Url('views_ui.form_handler_group', [
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
@@ -1108,7 +1095,7 @@ class ViewEditForm extends ViewFormBase {
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = $this->l(new FormattableMarkup('<span class="label">@text</span>', ['@text' => $this->t('Settings')]), new Url('views_ui.form_handler_extra', [
+        $build['fields'][$id]['#settings_links'][] = $this->l(SafeMarkup::format('<span class="label">@text</span>', ['@text' => $this->t('Settings')]), new Url('views_ui.form_handler_extra', [
           'js' => 'nojs',
           'view' => $view->id(),
           'display_id' => $display['id'],
@@ -1147,7 +1134,7 @@ class ViewEditForm extends ViewFormBase {
         foreach ($contents as $key => $pid) {
           if ($key != $last) {
             $operator = $group_info['groups'][$gid] == 'OR' ? $this->t('OR') : $this->t('AND');
-            $store[$pid]['#link'] = new FormattableMarkup('@link <span>@operator</span>', ['@link' => $store[$pid]['#link'], '@operator' => $operator]);
+            $store[$pid]['#link'] = SafeMarkup::format('@link <span>@operator</span>', ['@link' => $store[$pid]['#link'], '@operator' => $operator]);
           }
           $build['fields'][$pid] = $store[$pid];
         }

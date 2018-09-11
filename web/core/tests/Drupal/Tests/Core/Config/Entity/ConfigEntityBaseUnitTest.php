@@ -10,7 +10,6 @@ namespace Drupal\Tests\Core\Config\Entity;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
 use Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections;
@@ -38,11 +37,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   protected $entityType;
 
   /**
-   * The entity type manager used for testing.
+   * The entity manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $entityTypeManager;
+  protected $entityManager;
 
   /**
    * The ID of the type of the entity under test.
@@ -113,8 +112,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getConfigPrefix')
       ->willReturn('test_provider.' . $this->entityTypeId);
 
-    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
-    $this->entityTypeManager->expects($this->any())
+    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue($this->entityType));
@@ -132,7 +131,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->typedConfigManager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
 
     $container = new ContainerBuilder();
-    $container->set('entity_type.manager', $this->entityTypeManager);
+    $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
@@ -283,13 +282,13 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
           'config_dependencies' => [
             'config' => [$instance_dependency_1],
             'module' => [$instance_dependency_2],
-          ],
+          ]
         ],
         [
           'config' => [$instance_dependency_1],
-          'module' => [$instance_dependency_2, 'test'],
-        ],
-      ],
+          'module' => [$instance_dependency_2, 'test']
+        ]
+      ]
     ];
   }
 
@@ -469,7 +468,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::sort
    */
   public function testSort() {
-    $this->entityTypeManager->expects($this->any())
+    $this->entityManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->will($this->returnValue([
@@ -553,6 +552,32 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::toArray
+   */
+  public function testToArraySchemaFallback() {
+    $this->typedConfigManager->expects($this->once())
+      ->method('getDefinition')
+      ->will($this->returnValue(['mapping' => ['id' => '', 'dependencies' => '']]));
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn([]);
+    $properties = $this->entity->toArray();
+    $this->assertInternalType('array', $properties);
+    $this->assertEquals(['id' => $this->entity->id(), 'dependencies' => []], $properties);
+  }
+
+  /**
+   * @covers ::toArray
+   */
+  public function testToArrayFallback() {
+    $this->entityType->expects($this->any())
+      ->method('getPropertiesToExport')
+      ->willReturn([]);
+    $this->setExpectedException(SchemaIncompleteException::class);
+    $this->entity->toArray();
+  }
+
+  /**
    * @covers ::getThirdPartySetting
    * @covers ::setThirdPartySetting
    * @covers ::getThirdPartySettings
@@ -584,17 +609,6 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // Test unsetThirdPartyProviders().
     $this->entity->unsetThirdPartySetting('test_provider2', $key);
     $this->assertEquals([$third_party], $this->entity->getThirdPartyProviders());
-  }
-
-  /**
-   * @covers ::toArray
-   */
-  public function testToArraySchemaException() {
-    $this->entityType->expects($this->any())
-      ->method('getPropertiesToExport')
-      ->willReturn(NULL);
-    $this->setExpectedException(SchemaIncompleteException::class, 'Incomplete or missing schema for test_provider.');
-    $this->entity->toArray();
   }
 
 }

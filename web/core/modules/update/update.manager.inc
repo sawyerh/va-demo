@@ -53,17 +53,17 @@ function update_manager_download_batch_finished($success, $results) {
       '#title' => t('Downloading updates failed:'),
       '#items' => $results['errors'],
     ];
-    \Drupal::messenger()->addError(\Drupal::service('renderer')->render($item_list));
+    drupal_set_message(\Drupal::service('renderer')->render($item_list), 'error');
   }
   elseif ($success) {
-    \Drupal::messenger()->addStatus(t('Updates downloaded successfully.'));
+    drupal_set_message(t('Updates downloaded successfully.'));
     $_SESSION['update_manager_update_projects'] = $results['projects'];
     return new RedirectResponse(\Drupal::url('update.confirmation_page', [], ['absolute' => TRUE]));
   }
   else {
     // Ideally we're catching all Exceptions, so they should never see this,
     // but just in case, we have to tell them something.
-    \Drupal::messenger()->addError(t('Fatal error trying to download.'));
+    drupal_set_message(t('Fatal error trying to download.'), 'error');
   }
 }
 
@@ -208,7 +208,7 @@ function update_manager_file_get($url) {
   $remote_schemes = ['http', 'https', 'ftp', 'ftps', 'smb', 'nfs'];
   if (!isset($parsed_url['scheme']) || !in_array($parsed_url['scheme'], $remote_schemes)) {
     // This is a local file, just return the path.
-    return \Drupal::service('file_system')->realpath($url);
+    return drupal_realpath($url);
   }
 
   // Check the cache and download the file if needed.

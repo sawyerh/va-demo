@@ -89,16 +89,16 @@ class ConstraintViolationListTest extends TestCase
         $this->list[] = $violation;
 
         $this->assertSame($violation, $this->list[0]);
-        $this->assertArrayHasKey(0, $this->list);
+        $this->assertTrue(isset($this->list[0]));
 
         unset($this->list[0]);
 
-        $this->assertArrayNotHasKey(0, $this->list);
+        $this->assertFalse(isset($this->list[0]));
 
         $this->list[10] = $violation;
 
         $this->assertSame($violation, $this->list[10]);
-        $this->assertArrayHasKey(10, $this->list);
+        $this->assertTrue(isset($this->list[10]));
     }
 
     public function testToString()
@@ -128,35 +128,8 @@ EOF;
         $this->assertEquals($expected, (string) $this->list);
     }
 
-    /**
-     * @dataProvider findByCodesProvider
-     */
-    public function testFindByCodes($code, $violationsCount)
+    protected function getViolation($message, $root = null, $propertyPath = null)
     {
-        $violations = array(
-            $this->getViolation('Error', null, null, 'code1'),
-            $this->getViolation('Error', null, null, 'code1'),
-            $this->getViolation('Error', null, null, 'code2'),
-        );
-        $list = new ConstraintViolationList($violations);
-
-        $specificErrors = $list->findByCodes($code);
-
-        $this->assertInstanceOf(ConstraintViolationList::class, $specificErrors);
-        $this->assertCount($violationsCount, $specificErrors);
-    }
-
-    public function findByCodesProvider()
-    {
-        return array(
-            array('code1', 2),
-            array(array('code1', 'code2'), 3),
-            array('code3', 0),
-        );
-    }
-
-    protected function getViolation($message, $root = null, $propertyPath = null, $code = null)
-    {
-        return new ConstraintViolation($message, $message, array(), $root, $propertyPath, null, null, $code);
+        return new ConstraintViolation($message, $message, array(), $root, $propertyPath, null);
     }
 }

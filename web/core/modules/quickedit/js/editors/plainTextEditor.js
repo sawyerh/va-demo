@@ -15,9 +15,13 @@
       var editorModel = this.model;
       var fieldModel = this.fieldModel;
 
+      var $textElement = void 0;
       var $fieldItems = this.$el.find('.quickedit-field');
-      var $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
-      this.$textElement = $textElement;
+      if ($fieldItems.length) {
+        $textElement = this.$textElement = $fieldItems.eq(0);
+      } else {
+        $textElement = this.$textElement = this.$el;
+      }
       editorModel.set('originalValue', $.trim(this.$textElement.text()));
 
       var previousText = editorModel.get('originalValue');
@@ -81,12 +85,7 @@
       }
     },
     getQuickEditUISettings: function getQuickEditUISettings() {
-      return {
-        padding: true,
-        unifiedToolbar: false,
-        fullWidthToolbar: false,
-        popup: false
-      };
+      return { padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
     },
     revert: function revert() {
       this.$textElement.html(this.model.get('originalValue'));

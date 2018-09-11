@@ -71,8 +71,7 @@ class RebuildCommand extends Command
             ->addArgument(
                 'cache',
                 InputArgument::OPTIONAL,
-                $this->trans('commands.cache.rebuild.options.cache'),
-                'all'
+                $this->trans('commands.cache.rebuild.options.cache')
             )->setAliases(['cr']);
     }
 
@@ -113,4 +112,22 @@ class RebuildCommand extends Command
         return 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        $cache = $input->getArgument('cache');
+        if (!$cache) {
+            $cacheKeys = array_keys($this->drupalApi->getCaches());
+
+            $cache = $this->getIo()->choiceNoList(
+                $this->trans('commands.cache.rebuild.questions.cache'),
+                $cacheKeys,
+                'all'
+            );
+
+            $input->setArgument('cache', $cache);
+        }
+    }
 }

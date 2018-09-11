@@ -76,9 +76,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // condition.
       'url.path',
       'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT,
-      // These two cache contexts are added by BigPipe.
-      'cookies:big_pipe_nojs',
-      'session.exists',
     ];
 
     // Full node page 1.
@@ -86,7 +83,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'http_response',
       'rendered',
       'block_view',
-      'local_task',
       'config:block_list',
       'config:block.block.bartik_branding',
       'config:block.block.bartik_breadcrumbs',
@@ -128,7 +124,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'http_response',
       'rendered',
       'block_view',
-      'local_task',
       'config:block_list',
       'config:block.block.bartik_branding',
       'config:block.block.bartik_breadcrumbs',

@@ -59,17 +59,6 @@ class LessThanOrEqualValidatorTest extends AbstractComparisonValidatorTestCase
     /**
      * {@inheritdoc}
      */
-    public function provideValidComparisonsToPropertyPath()
-    {
-        return array(
-            array(4),
-            array(5),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function provideInvalidComparisons()
     {
         return array(

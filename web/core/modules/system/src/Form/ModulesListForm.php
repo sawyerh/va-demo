@@ -25,8 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * each module's name, description, and information about which modules it
  * requires. See \Drupal\Core\Extension\InfoParser for info on module.info.yml
  * descriptors.
- *
- * @internal
  */
 class ModulesListForm extends FormBase {
 
@@ -178,7 +176,6 @@ class ModulesListForm extends FormBase {
     // Lastly, sort all packages by title.
     uasort($form['modules'], ['\Drupal\Component\Utility\SortArray', 'sortByTitleProperty']);
 
-    $form['#attached']['library'][] = 'core/drupal.tableresponsive';
     $form['#attached']['library'][] = 'system/drupal.system.modules';
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
@@ -389,7 +386,7 @@ class ModulesListForm extends FormBase {
     }
 
     // Add all dependencies to a list.
-    foreach ($modules['install'] as $module => $value) {
+    while (list($module) = each($modules['install'])) {
       foreach (array_keys($data[$module]->requires) as $dependency) {
         if (!isset($modules['install'][$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
           $modules['dependencies'][$module][$dependency] = $data[$dependency]->info['name'];
@@ -450,28 +447,30 @@ class ModulesListForm extends FormBase {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
         $module_names = array_values($modules['install']);
-        $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
+        drupal_set_message($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
           '%name' => $module_names[0],
           '%names' => implode(', ', $module_names),
         ]));
       }
       catch (PreExistingConfigException $e) {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        $this->messenger()->addError(
+        drupal_set_message(
           $this->formatPlural(
             count($config_objects),
             'Unable to install @extension, %config_names already exists in active configuration.',
             'Unable to install @extension, %config_names already exist in active configuration.',
             [
               '%config_names' => implode(', ', $config_objects),
-              '@extension' => $modules['install'][$e->getExtension()],
-            ])
+              '@extension' => $modules['install'][$e->getExtension()]
+            ]),
+          'error'
         );
         return;
       }
       catch (UnmetDependenciesException $e) {
-        $this->messenger()->addError(
-          $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()])
+        drupal_set_message(
+          $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()]),
+          'error'
         );
         return;
       }

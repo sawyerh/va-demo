@@ -2,10 +2,9 @@
 
 namespace Stecman\Component\Symfony\Console\BashCompletion\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Stecman\Component\Symfony\Console\BashCompletion\HookFactory;
 
-class HookFactoryTest extends TestCase
+class HookFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var HookFactory
@@ -92,7 +91,9 @@ class HookFactoryTest extends TestCase
 
             $status = proc_close($process);
 
-            $this->assertSame(0, $status, "Syntax check for $context failed:\n$output");
+            if ($status !== 0) {
+                $this->fail("Syntax check for $context failed:\n$output");
+            }
         } else {
             throw new \RuntimeException("Failed to start process with command '$syntaxCheckCommand'");
         }

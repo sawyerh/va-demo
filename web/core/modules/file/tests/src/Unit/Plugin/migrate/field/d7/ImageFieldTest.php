@@ -10,7 +10,6 @@ use Prophecy\Argument;
 /**
  * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d7\ImageField
  * @group file
- * @group legacy
  */
 class ImageFieldTest extends UnitTestCase {
 
@@ -32,7 +31,7 @@ class ImageFieldTest extends UnitTestCase {
 
     $migration = $this->prophesize(MigrationInterface::class);
 
-    // The plugin's defineValueProcessPipeline() method will call
+    // The plugin's processFieldValues() method will call
     // mergeProcessOfProperty() and return nothing. So, in order to examine the
     // process pipeline created by the plugin, we need to ensure that
     // getProcess() always returns the last input to mergeProcessOfProperty().
@@ -44,12 +43,10 @@ class ImageFieldTest extends UnitTestCase {
   }
 
   /**
-   * @runInSeparateProcess
-   * @covers ::defineValueProcessPipeline
-   * @expectedDeprecation ImageField is deprecated in Drupal 8.5.x and will be removed before Drupal 9.0.x. Use \Drupal\image\Plugin\migrate\field\d7\ImageField instead. See https://www.drupal.org/node/2936061.
+   * @covers ::processFieldValues
    */
-  public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
-    $this->plugin->$method($this->migration, 'somefieldname', []);
+  public function testProcessFieldValues() {
+    $this->plugin->processFieldValues($this->migration, 'somefieldname', []);
 
     $expected = [
       'plugin' => 'sub_process',

@@ -1,16 +1,16 @@
 {
   "name": "Site Under Test",
-  "repositories": {
-    "drupal_org": {
+  "repositories": [
+    {
       "type": "composer",
       "url": "https://packages.drupal.org/8"
     }
-  },
+  ],
   "require": {
     "composer/installers": "^1.2",
     "cweagans/composer-patches": "~1.0",
-    "webflo/drupal-core-strict": "8.5.x-dev",
-    "drush/drush": "9.x-dev",
+    "webflo/drupal-core-strict": "8.4.x-dev",
+    "drush/drush": "*",
     "phpunit/phpunit": "4.*",
     "drupal/empty_theme": "1.0",
     "drupal/devel": "^1.0@RC",

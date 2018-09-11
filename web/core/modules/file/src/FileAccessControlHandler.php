@@ -22,12 +22,8 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
     /** @var \Drupal\file\FileInterface $entity */
     if ($operation == 'download' || $operation == 'view') {
       if (\Drupal::service('file_system')->uriScheme($entity->getFileUri()) === 'public') {
-        if ($operation === 'download') {
-          return AccessResult::allowed();
-        }
-        else {
-          return AccessResult::allowedIfHasPermission($account, 'access content');
-        }
+        // Always allow access to file in public file system.
+        return AccessResult::allowed();
       }
       elseif ($references = $this->getFileReferences($entity)) {
         foreach ($references as $field_name => $entity_map) {
@@ -52,11 +48,11 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
           //   services can be more properly injected.
           $allowed_fids = \Drupal::service('session')->get('anonymous_allowed_file_ids', []);
           if (!empty($allowed_fids[$entity->id()])) {
-            return AccessResult::allowed()->addCacheContexts(['session', 'user']);
+            return AccessResult::allowed();
           }
         }
         else {
-          return AccessResult::allowed()->addCacheContexts(['user']);
+          return AccessResult::allowed();
         }
       }
     }
@@ -64,11 +60,11 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
     if ($operation == 'delete' || $operation == 'update') {
       $account = $this->prepareUser($account);
       $file_uid = $entity->get('uid')->getValue();
-      // Only the file owner can update or delete the file entity.
+      // Only the file owner can delete and update the file entity.
       if ($account->id() == $file_uid[0]['target_id']) {
         return AccessResult::allowed();
       }
-      return AccessResult::forbidden('Only the file owner can update or delete the file entity.');
+      return AccessResult::forbidden();
     }
 
     // No opinion.
@@ -127,6 +123,8 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
     // create file entities that are referenced from another entity
     // (e.g. an image for a article). A contributed module is free to alter
     // this to allow file entities to be created directly.
+    // @todo Update comment to mention REST module when
+    //   https://www.drupal.org/node/1927648 is fixed.
     return AccessResult::neutral();
   }
 

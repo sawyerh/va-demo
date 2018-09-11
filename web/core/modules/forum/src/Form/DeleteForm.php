@@ -9,8 +9,6 @@ use Drupal\taxonomy\TermInterface;
 
 /**
  * Builds the form to delete a forum term.
- *
- * @internal
  */
 class DeleteForm extends ConfirmFormBase {
 
@@ -63,7 +61,7 @@ class DeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->taxonomyTerm->delete();
-    $this->messenger()->addStatus($this->t('The forum %label and all sub-forums have been deleted.', ['%label' => $this->taxonomyTerm->label()]));
+    drupal_set_message($this->t('The forum %label and all sub-forums have been deleted.', ['%label' => $this->taxonomyTerm->label()]));
     $this->logger('forum')->notice('forum: deleted %label and all its sub-forums.', ['%label' => $this->taxonomyTerm->label()]);
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

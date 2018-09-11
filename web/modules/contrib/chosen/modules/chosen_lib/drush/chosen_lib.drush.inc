@@ -8,25 +8,25 @@
 /**
  * The Chosen plugin URI.
  */
-define('CHOSEN_DOWNLOAD_URI', 'https://github.com/harvesthq/chosen/releases/download/v1.8.2/chosen_v1.8.2.zip');
+define('CHOSEN_DOWNLOAD_URI', 'https://github.com/harvesthq/chosen/releases/download/v1.7.0/chosen_v1.7.0.zip');
 
 /**
  * Implements hook_drush_command().
  */
 function chosen_lib_drush_command() {
-  $items = [];
+  $items = array();
 
   // The key in the $items array is the name of the command.
   // No bootstrap.
-  $items['chosen-plugin'] = [
+  $items['chosen-plugin'] = array(
     'callback' => 'drush_chosen_lib_plugin',
     'description' => dt('Download and install the Chosen plugin.'),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
-    'arguments' => [
+    'arguments' => array(
       'path' => dt('Optional. A path where to install the Chosen plugin. If omitted Drush will use the default location.'),
-    ],
-    'aliases' => ['chosenplugin'],
-  ];
+    ),
+    'aliases' => array('chosenplugin'),
+  );
 
   return $items;
 }
@@ -56,7 +56,7 @@ function drush_chosen_lib_plugin() {
   // Create the path if it does not exist.
   if (!is_dir($path)) {
     drush_op('mkdir', $path);
-    drush_log(dt('Directory @path was created', ['@path' => $path]), 'notice');
+    drush_log(dt('Directory @path was created', array('@path' => $path)), 'notice');
   }
 
   // Set the directory to the download location.
@@ -72,7 +72,7 @@ function drush_chosen_lib_plugin() {
     if (is_dir($dirname) || is_dir('chosen')) {
       drush_delete_dir($dirname, TRUE);
       drush_delete_dir('chosen', TRUE);
-      drush_log(dt('A existing Chosen plugin was deleted from @path', ['@path' => $path]), 'notice');
+      drush_log(dt('A existing Chosen plugin was deleted from @path', array('@path' => $path)), 'notice');
     }
 
     // Decompress the zip archive.
@@ -86,10 +86,10 @@ function drush_chosen_lib_plugin() {
   }
 
   if (is_dir($dirname)) {
-    drush_log(dt('Chosen plugin has been installed in @path', ['@path' => $path]), 'success');
+    drush_log(dt('Chosen plugin has been installed in @path', array('@path' => $path)), 'success');
   }
   else {
-    drush_log(dt('Drush was unable to install the Chosen plugin to @path', ['@path' => $path]), 'error');
+    drush_log(dt('Drush was unable to install the Chosen plugin to @path', array('@path' => $path)), 'error');
   }
 
   // Set working directory back to the previous working directory.

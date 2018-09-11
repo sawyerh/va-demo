@@ -31,7 +31,7 @@ interface WorkflowConfigTransitionInterface {
   public function isAllowed(UserInterface $user, $force = FALSE);
 
   /**
-   * Returns the Workflow object of this object.
+   * Returns the Workflow object of this State.
    *
    * @return Workflow
    *   Workflow object.
@@ -39,10 +39,10 @@ interface WorkflowConfigTransitionInterface {
   public function getWorkflow();
 
   /**
-   * Returns the Workflow ID of this object.
+   * Returns the Workflow ID of this Transition
    *
    * @return string
-   *   Workflow ID.
+   *   Workflow Id.
    */
   public function getWorkflowId();
 
@@ -66,9 +66,4 @@ interface WorkflowConfigTransitionInterface {
    */
   public function getToSid();
 
-  /**
-   * Determines if the State changes by this Transition.
-   * @return bool
-   */
-  public function hasStateChange();
 }

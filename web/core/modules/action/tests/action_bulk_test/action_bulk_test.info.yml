@@ -5,6 +5,6 @@ package: Testing
 version: VERSION
 core: 8.x
 dependencies:
-  - drupal:action
-  - drupal:views
-  - drupal:node
+  - action
+  - views
+  - node

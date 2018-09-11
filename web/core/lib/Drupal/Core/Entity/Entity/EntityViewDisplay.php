@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityDisplayPluginCollection;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityDisplayBase;
-use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 
 /**
  * Configuration entity that contains display options for all components of a
@@ -20,9 +20,6 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "status" = "status"
- *   },
- *   handlers = {
- *     "access" = "\Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler",
  *   },
  *   config_export = {
  *     "id",
@@ -201,7 +198,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         'view_mode' => $this->originalMode,
         // No need to prepare, defaults have been merged in setComponent().
         'prepare' => FALSE,
-        'configuration' => $configuration,
+        'configuration' => $configuration
       ]);
     }
     else {
@@ -253,7 +250,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
           // those values using:
           // - the entity language if the entity is translatable,
           // - the current "content language" otherwise.
-          if ($entity instanceof TranslatableDataInterface && $entity->isTranslatable()) {
+          if ($entity instanceof TranslatableInterface && $entity->isTranslatable()) {
             $view_langcode = $entity->language()->getId();
           }
           else {
@@ -301,7 +298,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     }
 
     return [
-      'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations),
+      'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations)
     ];
   }
 

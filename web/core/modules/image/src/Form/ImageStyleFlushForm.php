@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form controller for image style flush.
- *
- * @internal
  */
 class ImageStyleFlushForm extends EntityConfirmFormBase {
 
@@ -45,7 +43,7 @@ class ImageStyleFlushForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->flush();
-    $this->messenger()->addStatus($this->t('The image style %name has been flushed.', ['%name' => $this->entity->label()]));
+    drupal_set_message($this->t('The image style %name has been flushed.', ['%name' => $this->entity->label()]));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

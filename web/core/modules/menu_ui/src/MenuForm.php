@@ -19,8 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for menu edit forms.
- *
- * @internal
  */
 class MenuForm extends EntityForm {
 
@@ -166,11 +164,11 @@ class MenuForm extends EntityForm {
     $status = $menu->save();
     $edit_link = $this->entity->link($this->t('Edit'));
     if ($status == SAVED_UPDATED) {
-      $this->messenger()->addStatus($this->t('Menu %label has been updated.', ['%label' => $menu->label()]));
+      drupal_set_message($this->t('Menu %label has been updated.', ['%label' => $menu->label()]));
       $this->logger('menu')->notice('Menu %label has been updated.', ['%label' => $menu->label(), 'link' => $edit_link]);
     }
     else {
-      $this->messenger()->addStatus($this->t('Menu %label has been added.', ['%label' => $menu->label()]));
+      drupal_set_message($this->t('Menu %label has been added.', ['%label' => $menu->label()]));
       $this->logger('menu')->notice('Menu %label has been added.', ['%label' => $menu->label(), 'link' => $edit_link]);
     }
 

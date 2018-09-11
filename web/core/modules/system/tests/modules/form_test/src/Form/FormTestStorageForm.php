@@ -13,8 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
  * in the form storage and have to be present during any step. By setting the
  * request parameter "cache" the form can be tested with caching enabled, as
  * it would be the case, if the form would contain some #ajax callbacks.
- *
- * @internal
  */
 class FormTestStorageForm extends FormBase {
 
@@ -50,7 +48,7 @@ class FormTestStorageForm extends FormBase {
     }
     // Count how often the form is constructed.
     $_SESSION['constructions']++;
-    $this->messenger()->addStatus("Form constructions: " . $_SESSION['constructions']);
+    drupal_set_message("Form constructions: " . $_SESSION['constructions']);
 
     $form['title'] = [
       '#type' => 'textfield',
@@ -136,10 +134,10 @@ class FormTestStorageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->messenger()->addStatus("Title: " . Html::escape($form_state->getValue('title')));
-    $this->messenger()->addStatus("Form constructions: " . $_SESSION['constructions']);
+    drupal_set_message("Title: " . Html::escape($form_state->getValue('title')));
+    drupal_set_message("Form constructions: " . $_SESSION['constructions']);
     if ($form_state->has(['thing', 'changed'])) {
-      $this->messenger()->addStatus("The thing has been changed.");
+      drupal_set_message("The thing has been changed.");
     }
     $form_state->setRedirect('<front>');
   }

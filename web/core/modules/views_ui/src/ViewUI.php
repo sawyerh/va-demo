@@ -48,7 +48,7 @@ class ViewUI implements ViewEntityInterface {
    * If this view is locked for editing.
    *
    * If this view is locked it will contain the result of
-   * \Drupal\Core\TempStore\SharedTempStore::getMetadata(). Which can be a stdClass or
+   * \Drupal\user\SharedTempStore::getMetadata(). Which can be a stdClass or
    * NULL.
    *
    * @var stdClass
@@ -713,7 +713,7 @@ class ViewUI implements ViewEntityInterface {
                 'data' => [
                   '#markup' => $path,
                 ],
-              ],
+              ]
             ];
           }
           if ($show_stats) {
@@ -790,7 +790,7 @@ class ViewUI implements ViewEntityInterface {
     else {
       foreach ($errors as $display_errors) {
         foreach ($display_errors as $error) {
-          \Drupal::messenger()->addError($error);
+          drupal_set_message($error, 'error');
         }
       }
       $preview = ['#markup' => t('Unable to preview due to validation errors.')];
@@ -855,11 +855,11 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Sets a cached view object in the shared tempstore.
+   * Sets a cached view object in the user tempstore.
    */
   public function cacheSet() {
     if ($this->isLocked()) {
-      \Drupal::messenger()->addError(t('Changes cannot be made to a locked view.'));
+      drupal_set_message(t('Changes cannot be made to a locked view.'), 'error');
       return;
     }
 
@@ -878,7 +878,7 @@ class ViewUI implements ViewEntityInterface {
     $executable->default_display = NULL;
     $executable->query = NULL;
     $executable->displayHandlers = NULL;
-    \Drupal::service('tempstore.shared')->get('views')->set($this->id(), $this);
+    \Drupal::service('user.shared_tempstore')->get('views')->set($this->id(), $this);
   }
 
   /**

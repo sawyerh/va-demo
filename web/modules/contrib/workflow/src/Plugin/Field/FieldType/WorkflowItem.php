@@ -156,6 +156,7 @@ class WorkflowItem extends ListItemBase {
 
     return [
       'workflow_type' => '',
+      'allowed_values_function' => 'workflow_state_allowed_values',
     ] + parent::defaultStorageSettings();
   }
 

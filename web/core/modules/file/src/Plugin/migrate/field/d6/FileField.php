@@ -9,9 +9,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 /**
  * @MigrateField(
  *   id = "filefield",
- *   core = {6},
- *   source_module = "filefield",
- *   destination_module = "file"
+ *   core = {6}
  * )
  */
 class FileField extends FieldPluginBase {
@@ -42,7 +40,7 @@ class FileField extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data) {
+  public function processFieldValues(MigrationInterface $migration, $field_name, $data) {
     $process = [
       'plugin' => 'd6_field_file',
       'source' => $field_name,

@@ -21,7 +21,6 @@ class User extends FieldMigration {
         'ignore_map' => TRUE,
       ] + $this->source;
       $definition['destination']['plugin'] = 'null';
-      $definition['idMap']['plugin'] = 'null';
       if (\Drupal::moduleHandler()->moduleExists('field')) {
         $definition['source']['plugin'] = 'd7_field_instance';
         $field_migration = $this->migrationPluginManager->createStubMigration($definition);
@@ -37,7 +36,7 @@ class User extends FieldMigration {
             }
             $info = $row->getSource();
             $this->fieldPluginCache[$field_type]
-              ->defineValueProcessPipeline($this, $field_name, $info);
+              ->processFieldValues($this, $field_name, $info);
           }
           else {
             if ($this->cckPluginManager->hasDefinition($field_type)) {
