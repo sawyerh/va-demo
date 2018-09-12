@@ -1,4 +1,44 @@
-# VA Demo
+## Demo requirements
+
+| Name | Value |
+| --- | --- |
+| Publicly-accessible URL to prototype | TODO |
+| Checksum hash pointing to the revision to be evaluated on the `master` branch | TODO |
+| URL to a private administrative panel for the CMS portion of the prototype | TODO |
+
+### Helpful links:
+
+- TODO: Link to **design/research** artifacts directory
+- TODO: Link to **content** artifacts directory
+
+## Repo structure
+
+```
+├── bin
+├── config
+├── deploy
+├── docs                     Design and technical documentation
+├── drush
+├── files-private
+├── scripts
+│   └── composer
+├── tests
+│   ├── accessibility
+│   ├── bdd
+│   ├── security
+│   └── visual
+└── web
+    ├── core
+    ├── libraries
+    ├── modules
+    ├── profiles
+    ├── sites
+    └── themes
+        ├── contrib
+        │   └── uswds
+        └── custom
+            └── vademo       Custom Drupal theme code
+```
 
 ## Requirements
 
@@ -70,7 +110,7 @@ Always create a new branch to work on each user story or change.
 * Make sure you export any configuration changes you've made to ensure that what you've done on your machine can be replicated on other machines. Do this by running `drush -y config:export` and commit those results before you submit your pull-request.
 * If you have made changes to sample content or entity structures you should also update the sample content by running `drush dcem va-demo` and committing those results. It is expected that some timestamps will be updated when doing this.
 * If you have added sample content look up the entity uuids for your new content:  `drush sqlq 'SELECT nid, uuid FROM node;'` , then
-*  Add the UUIDs associated with the new NIDs to `web/modules/custom/va-demo/va-demo.info.yml` 
+*  Add the UUIDs associated with the new NIDs to `web/modules/custom/va-demo/va-demo.info.yml`
 * Run `drush dcem va-demo` and commit those results.
 * Not sure if all your changes work? Test your work by recreating your sandbox with your current code (see above).
 
