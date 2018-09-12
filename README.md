@@ -126,7 +126,7 @@ docker build -t fema-grants .
 To test the image locally, create a docker-compose.override.yml file using:
 
 ```
-echo -e 'version: "3"\nservices:\n  web:\n    image: fema-grants' > docker-compose.override.yml
+echo -e 'version: "3"\nservices:\n  web:\n    image: va-demo' > docker-compose.override.yml
 docker-compose stop
 docker-compose rm -f
 docker-compose up -d
