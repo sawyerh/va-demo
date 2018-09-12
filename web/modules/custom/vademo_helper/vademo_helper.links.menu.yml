@@ -1,0 +1,9 @@
+vademo_helper.admin-1:
+  title: 'Privacy Policies'
+  description: ''
+  parent: main
+  menu_name: main
+  url: internal:/node/1
+  weight: 400
+
+

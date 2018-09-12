@@ -1,0 +1,9 @@
+name: 'VAHelperDemo'
+type: module
+description: 'VA Helper Demo'
+core: 8.x
+package: 'Custom'
+
+default_content:
+  node:
+  user:

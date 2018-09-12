@@ -12,7 +12,6 @@ module:
   datetime: 0
   datetime_range: 0
   dblog: 0
-  default_content: 0
   dynamic_page_cache: 0
   editor: 0
   field: 0
@@ -47,6 +46,8 @@ module:
   views_ui: 0
   workflows: 0
   menu_link_content: 1
+  vademo_helper: 0
+  default_content: 1
   views: 10
   minimal: 1000
 theme:
