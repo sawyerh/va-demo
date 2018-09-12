@@ -120,7 +120,7 @@ zap
 Edit the Dockerfile, then rebuild using:
 
 ```
-docker build -t fema-grants .
+docker build -t va-demo .
 ```
 
 To test the image locally, create a docker-compose.override.yml file using:
