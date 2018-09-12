@@ -44,7 +44,7 @@ docker-compose up -d
 ```
 
 ## Using the site
-Public site URL: https:drupal.va.demonow.io
+Public site URL: https://drupal.va.demonow.io
 
 ### Site login credentials
 
