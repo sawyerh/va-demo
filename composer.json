@@ -74,6 +74,7 @@
         "drupal/twig_render_this": "^1.0",
         "drupal/twig_tweak": "^2.0",
         "drupal/uswds": "^1.0@beta",
+        "drupal/uswds_paragraphs": "^1.0@beta",
         "drupal/video": "^1.2",
         "drupal/views_jump_menu": "^1.0@beta",
         "drupal/viewsreference": "2.0.0-alpha4",
