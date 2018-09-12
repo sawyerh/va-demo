@@ -6,4 +6,10 @@ id: content_creator
 label: 'Content creator'
 weight: 3
 is_admin: null
-permissions: {  }
+permissions:
+  - 'access content overview'
+  - 'create basic_page content'
+  - 'delete own basic_page content'
+  - 'edit any basic_page content'
+  - 'edit own basic_page content'
+  - 'view basic_page revisions'
