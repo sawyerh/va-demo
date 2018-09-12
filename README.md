@@ -60,10 +60,10 @@ Always create a new branch to work on each user story or change.
 ### After you've done your coding work
 
 * Make sure you export any configuration changes you've made to ensure that what you've done on your machine can be replicated on other machines. Do this by running `drush -y config:export` and commit those results before you submit your pull-request.
-* If you have made changes to sample content or entity structures you should also update the sample content by running `drush dcem fema_federal_financial_report` and committing those results. It is expected that some timestamps will be updated when doing this.
+* If you have made changes to sample content or entity structures you should also update the sample content by running `drush dcem va-demo` and committing those results. It is expected that some timestamps will be updated when doing this.
 * If you have added sample content look up the entity uuids for your new content:  `drush sqlq 'SELECT nid, uuid FROM node;'` , then
-*  Add the UUIDs associated with the new NIDs to `web/modules/custom/fema_federal_financial_report/fema_federal_financial_report.info.yml` 
-* Run `drush dcem fema_federal_financial_report` and commit those results.
+*  Add the UUIDs associated with the new NIDs to `web/modules/custom/va-demo/va-demo.info.yml` 
+* Run `drush dcem va-demo` and commit those results.
 * Not sure if all your changes work? Test your work by recreating your sandbox with your current code (see above).
 
 ## Testing
