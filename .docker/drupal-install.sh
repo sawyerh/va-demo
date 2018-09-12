@@ -9,17 +9,11 @@ $DRUSH -y site:install minimal --account-pass=teamagile6 --sites-subdir=default 
 echo "Importing Configuration"
 $DRUSH -y config-import
 
-# echo "Adding analyst roles"
-# $DRUSH user:role:add analyst Mary.Analyst
+echo "Adding Content Creator roles"
+$DRUSH user:role:add content_creator Mary.Creator
 
-# echo "Adding specialist roles"
-# $DRUSH user:role:add specialist Jackson.Specialist,Celeste.Aspecialist
-
-# echo "Adding grantee roles"
-# $DRUSH user:role:add grantee Marcos.Fletcher,Shannon.Blair,Amy.Fleming,Rose.Mack,Colleen.Parsons,Andrea.Wells,Cynthia.Tran,Darnell.Wright,Pamela.Clarke,Cameron.Denton,Mei.Lee,Sage.Anthony,Jillian.Doll,Roxanna.Kozlowski,Providencia.Camp,Shan.Vanover,Tessie.Oswald,Michel.Villanueva,Annice.Shackelford
-
-#echo "Unblocking and setting e-mail addresses for demo users"
-# $DRUSH sqlq "UPDATE users_field_data SET mail=CONCAT(name, '@example.com'), status=1 WHERE uid > 0"
+echo "Unblocking and setting e-mail addresses for demo users"
+$DRUSH sqlq "UPDATE users_field_data SET mail=CONCAT(name, '@example.com'), status=1 WHERE uid > 0"
 
 echo "Setting passwords"
 for NAME in $($DRUSH sqlq "SELECT name FROM users_field_data WHERE uid > 0"); do

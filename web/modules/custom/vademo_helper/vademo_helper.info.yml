@@ -6,4 +6,6 @@ package: 'Custom'
 
 default_content:
   node:
+    -
   user:
+    - 4f4dc99a-e9fd-448b-bca8-c205da565ab5
