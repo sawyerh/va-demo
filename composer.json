@@ -52,6 +52,7 @@
         "drupal/field_group": "^1.0",
         "drupal/google_analytics": "^2.3",
         "drupal/iframe": "^1.7",
+        "drupal/legal": "^1.0@beta",
         "drupal/linkit": "^4.3",
         "drupal/markup": "^1.0@beta",
         "drupal/menu_block": "^1.4",
