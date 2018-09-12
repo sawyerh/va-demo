@@ -5716,6 +5716,57 @@
         }
     },
     {
+        "name": "drupal/uswds_paragraphs",
+        "version": "1.0.0-beta3",
+        "version_normalized": "1.0.0.0-beta3",
+        "source": {
+            "type": "git",
+            "url": "https://git.drupal.org/project/uswds_paragraphs",
+            "reference": "8.x-1.0-beta3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://ftp.drupal.org/files/projects/uswds_paragraphs-8.x-1.0-beta3.zip",
+            "reference": "8.x-1.0-beta3",
+            "shasum": "902793c92fe686bed4df4ac714f26bbf357f4494"
+        },
+        "require": {
+            "drupal/core": "*",
+            "drupal/paragraphs": "*"
+        },
+        "type": "drupal-module",
+        "extra": {
+            "branch-alias": {
+                "dev-1.x": "1.x-dev"
+            },
+            "drupal": {
+                "version": "8.x-1.0-beta3",
+                "datestamp": "1502243644",
+                "security-coverage": {
+                    "status": "not-covered",
+                    "message": "Project has not opted into security advisory coverage!"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packages.drupal.org/8/downloads",
+        "license": [
+            "GPL-2.0+"
+        ],
+        "authors": [
+            {
+                "name": "brockfanning",
+                "homepage": "https://www.drupal.org/user/709486"
+            }
+        ],
+        "description": "Paragraph types intended for use with the U.S. Web Design Standards library.",
+        "homepage": "https://www.drupal.org/project/uswds_paragraphs",
+        "support": {
+            "source": "http://cgit.drupalcode.org/uswds_paragraphs",
+            "issues": "https://www.drupal.org/project/issues/uswds_paragraphs?categories=All"
+        }
+    },
+    {
         "name": "drupal/video",
         "version": "1.2.0",
         "version_normalized": "1.2.0.0",
