@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.basic_page.body
+    - field.field.node.basic_page.field_content_block
     - node.type.basic_page
   module:
+    - paragraphs
     - path
     - text
 id: node.basic_page.default
@@ -28,6 +30,18 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_content_block:
+    type: entity_reference_paragraphs
+    weight: 122
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
   path:
     type: path
     weight: 30
