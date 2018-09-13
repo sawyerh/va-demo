@@ -89,9 +89,11 @@ Public site URL: https://drupal.va.demonow.io
 ### Site login credentials
 
 Administrative username (Drupal User/1): **admin** 
+
 Password: **teamagile6**
 
 VA.GOV administrator: **va.gov-modernization** 
+
 Password: **teamagile6**
 
 ## Starting work
