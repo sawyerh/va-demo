@@ -13,3 +13,7 @@ Feature: Alert Content Type Settings and Access
       | editor	                | create     |
       | editor	                | edit own   |
       | editor	                | edit any   |
+      | publisher	                | create     |
+      | publisher	                | edit own   |
+      | publisher	                | edit any   |
+      
