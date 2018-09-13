@@ -70,6 +70,7 @@
         "drupal/seckit": "^1.0@alpha",
         "drupal/select_text_value": "^1.1",
         "drupal/seo_checklist": "^4.1",
+        "drupal/shield": "^1.2",
         "drupal/simple_gmap": "^1.4",
         "drupal/smart_trim": "^1.1",
         "drupal/twig_render_this": "^1.0",
