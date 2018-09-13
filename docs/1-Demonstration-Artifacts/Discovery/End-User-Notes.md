@@ -1,3 +1,0 @@
-### End User Notes Artifact
-
--
