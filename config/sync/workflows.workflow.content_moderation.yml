@@ -40,6 +40,7 @@ type_settings:
       weight: 0
       from:
         - draft
+        - in_review
         - published
     send_for_review:
       label: 'Send for review'
