@@ -10,8 +10,8 @@ dependencies:
     - vademo
 id: vademo_footer
 theme: vademo
-region: footer_secondary
-weight: 0
+region: footer_menu
+weight: -4
 provider: null
 plugin: 'system_menu_block:footer'
 settings:
