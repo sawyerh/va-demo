@@ -3,6 +3,6 @@
 - Research Plan
 - Interview Questions
 - Interview Notes
-- Interview Recordings
+- Interview Recordings (Cannot record)
 - User Story Mapping Picture
 - 
