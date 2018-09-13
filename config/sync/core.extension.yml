@@ -5,9 +5,9 @@ module:
   block: 0
   breakpoint: 0
   ckeditor: 0
-  comment: 0
   computed_field: 0
   config: 0
+  content_moderation: 0
   contextual: 0
   datetime: 0
   datetime_range: 0

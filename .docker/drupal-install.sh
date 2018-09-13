@@ -11,6 +11,7 @@ $DRUSH -y config-import
 
 echo "Adding Content Creator roles"
 $DRUSH user:role:add content_creator Mary.Creator
+$DRUSH user:role:add editor Mei.Editor
 
 echo "Unblocking and setting e-mail addresses for demo users"
 $DRUSH sqlq "UPDATE users_field_data SET mail=CONCAT(name, '@example.com'), status=1 WHERE uid > 0"
