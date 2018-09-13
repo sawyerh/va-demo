@@ -3681,29 +3681,14 @@ input[type="search"] {
     top: 0;
     transition: all 0.2s ease-in-out; }
 
-.field--widget-number .field-prefix {
-  display: none; }
+.usa-header {
+  background: #112e51; }
 
-.field--widget-number label {
-  float: left;
-  width: 50%;
-  margin-top: 1rem; }
+.usa-logo a {
+  color: #e1f3f8; }
 
-.field--widget-number input {
-  float: right;
-  width: 50%; }
-
-.field--widget-number :after {
-  content: "";
-  display: table;
-  clear: both; }
-
-.field {
-  clear: left;
-  padding: 2rem 0; }
-
-.field__label {
-  font-weight: bold;
-  width: 40%;
-  float: left;
-  padding-right: 2rem; }
+.usa-nav-secondary-links a {
+  color: #e1f3f8;
+  font-weight: bold; }
+  .usa-nav-secondary-links a:hover {
+    color: #9bdaf1; }
