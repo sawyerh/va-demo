@@ -88,9 +88,11 @@ Public site URL: https://drupal.va.demonow.io
 
 ### Site login credentials
 
-Administrative username (user/1): `admin` Password: `teamagile6`
+Administrative username (Drupal User/1): **admin** 
+Password: **teamagile6**
 
-VA.GOV administrator: `va.gov-modernization` Password: `teamagile6`
+VA.GOV administrator: **va.gov-modernization** 
+Password: **teamagile6**
 
 ## Starting work
 If you start work on a new change you will need to pull code from git and also sync your local database with the current configuration files. To do this:
