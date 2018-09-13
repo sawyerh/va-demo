@@ -3,42 +3,52 @@
 | Name | Value |
 | --- | --- |
 | Publicly-accessible URL to prototype |  https://drupal.va.demonow.io |
-| Checksum hash pointing to the revision to be evaluated on the `master` branch | TODO |
+| Checksum hash pointing to the revision to be evaluated on the `master` branch | `5031fc2a17c4713842f18830226771af79e35205` |
 | URL to a private administrative panel for the CMS portion of the prototype | https://drupal.va.demonow.io/admin/ |
 
-### Helpful links:
+### Site login credentials
 
-- TODO: Link to **design/research** artifacts directory
-- TODO: Link to **content** artifacts directory
+Administrative username (Drupal User/1): **admin**
 
-## Repo structure
+Password: **teamagile6**
 
-```
-├── bin
-├── config
-├── deploy
-├── docs                     Design and technical documentation
-├── drush
-├── files-private
-├── scripts
-│   └── composer
-├── tests
-│   ├── accessibility
-│   ├── bdd
-│   ├── security
-│   └── visual
-└── web
-    ├── core
-    ├── libraries
-    ├── modules
-    ├── profiles
-    ├── sites
-    └── themes
-        ├── contrib
-        │   └── uswds
-        └── custom
-            └── vademo       Custom Drupal theme code
-```
+VA.GOV administrator: **va.gov-modernization**
+
+Password: **teamagile6**
+
+### Design, research, and other artifacts
+
+Artifacts are available in the [`docs` directory](docs).
+
+### Our Hypotheses and Assumptions
+
+#### For OPIA users/audience
+
+We think that by interviewing and understanding a variety of OPIA audience users, we can create better guidelines for the OPIA for how the content should be presented
+
+**We think if the OPIA takes this into consideration as they curate and manage their website, we'll:**
+
+- Improve user satisfaction
+- Increase the speed with which users find what they need on the OPIA's website
+- Improve ease of **accessing assets and key data/information**
+
+The guidelines would include:
+
+- Content prioritization
+- Language and tone guidelines
+- best practices for accessibility
+
+#### For OPIA staff
+
+- We believe that by making these three discrete content management roles and workflows (CREATE, REVIEW, PUBLISH), that we will allow OPIA staff to manage the editing process with increased efficiency, and better governance
+- We think that by allowing flexibility in content types (text, photos, alerts, PDF) that we'd be improving the speed and efficiency and ease of use of the CMS for the OPIA team
+
+**We think it will**
+
+- Increase **speed** and improve **ease** of editing and governing content
+- reduce putting out fires and individual requests if those things could be displayed more clearly on the site
+- Create efficiency / centralization
+- Reduce the number of tools the team needs to use to manage the OPIA web presence (flickr, other ways of embedding media, etc)
 
 ## Requirements
 
@@ -82,19 +92,6 @@ docker-compose stop
 docker-compose rm -f
 docker-compose up -d
 ```
-
-## Using the site
-Public site URL: https://drupal.va.demonow.io
-
-### Site login credentials
-
-Administrative username (Drupal User/1): **admin** 
-
-Password: **teamagile6**
-
-VA.GOV administrator: **va.gov-modernization** 
-
-Password: **teamagile6**
 
 ## Starting work
 If you start work on a new change you will need to pull code from git and also sync your local database with the current configuration files. To do this:
