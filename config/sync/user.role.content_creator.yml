@@ -12,6 +12,7 @@ permissions:
   - 'access toolbar'
   - 'create alert content'
   - 'create basic_page content'
+  - 'create landing_page content'
   - 'create url aliases'
   - 'delete own alert content'
   - 'delete own basic_page content'
