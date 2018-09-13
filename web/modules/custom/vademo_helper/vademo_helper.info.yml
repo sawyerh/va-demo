@@ -7,6 +7,8 @@ package: 'Custom'
 default_content:
   node:
     - f9256bf1-93bc-4f9f-a008-3a4ad36b8887
+    - 5966616e-186e-453c-bbcf-f6ce86d1f4fa
+    - 82f04150-7a19-4cf1-958a-d7399a62dc10
   user:
     - 4f4dc99a-e9fd-448b-bca8-c205da565ab5
     - 87f97195-f131-4f73-9e35-4b30caf3d8c3
