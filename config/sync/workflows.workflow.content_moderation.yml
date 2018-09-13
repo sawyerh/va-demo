@@ -46,6 +46,7 @@ type_settings:
       label: 'Send for review'
       from:
         - draft
+        - in_review
       to: in_review
       weight: -1
   entity_types:

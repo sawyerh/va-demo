@@ -16,6 +16,7 @@ permissions:
   - 'bypass node access'
   - 'create alert content'
   - 'create basic_page content'
+  - 'create landing_page content'
   - 'create url aliases'
   - 'delete any alert content'
   - 'delete any basic_page content'
