@@ -8,8 +8,11 @@ weight: 3
 is_admin: null
 permissions:
   - 'access content overview'
+  - 'access toolbar'
   - 'create basic_page content'
   - 'delete own basic_page content'
   - 'edit any basic_page content'
   - 'edit own basic_page content'
+  - 'use text format filtered_html'
   - 'view basic_page revisions'
+  - 'view the administration theme'
