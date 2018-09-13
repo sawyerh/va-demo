@@ -11,3 +11,4 @@ is_admin: false
 permissions:
   - 'access content'
   - 'create update_internal_status workflow_transition'
+  - 'search content'
