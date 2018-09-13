@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: editor
-label: Editor
+label: Reviewer
 weight: 4
 is_admin: null
 permissions:
@@ -12,7 +12,6 @@ permissions:
   - 'access site in maintenance mode'
   - 'access toolbar'
   - 'administer menu'
-  - 'administer nodes'
   - 'administer statistics'
   - 'bypass node access'
   - 'create alert content'
@@ -29,10 +28,12 @@ permissions:
   - 'revert alert revisions'
   - 'revert all revisions'
   - 'revert basic_page revisions'
-  - 'use content_moderation transition publish'
+  - 'use content_moderation transition create_new_draft'
+  - 'use content_moderation transition send_for_review'
   - 'use text format filtered_html'
   - 'use text format full_html'
   - 'view alert revisions'
+  - 'view all revisions'
   - 'view any unpublished content'
   - 'view basic_page revisions'
   - 'view latest version'
