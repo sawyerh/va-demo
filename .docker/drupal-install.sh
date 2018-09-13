@@ -11,6 +11,8 @@ $DRUSH -y config-import
 
 echo "Adding Content Creator roles"
 $DRUSH user:role:add content_creator Mary.Creator
+
+echo "Adding Editor role"
 $DRUSH user:role:add editor Mei.Editor
 
 echo "Unblocking and setting e-mail addresses for demo users"
