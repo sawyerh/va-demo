@@ -1,2 +1,0 @@
-### Business Owner Interview Notes
-
