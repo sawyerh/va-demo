@@ -2,9 +2,9 @@
 
 | Name | Value |
 | --- | --- |
-| Publicly-accessible URL to prototype | TODO |
+| Publicly-accessible URL to prototype |  https://drupal.va.demonow.io |
 | Checksum hash pointing to the revision to be evaluated on the `master` branch | TODO |
-| URL to a private administrative panel for the CMS portion of the prototype | TODO |
+| URL to a private administrative panel for the CMS portion of the prototype | https://drupal.va.demonow.io/admin/ |
 
 ### Helpful links:
 
