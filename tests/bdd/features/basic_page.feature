@@ -15,4 +15,6 @@ Feature: Basic Page Content Type Settings and Access
       | administratror	        | create     |
       | administratror	        | edit own   |
       | administratror	        | edit any   |
-
+      | editor	                | create     |
+      | editor	                | edit own   |
+      | editor	                | edit any   |
