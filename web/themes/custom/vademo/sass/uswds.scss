@@ -3,37 +3,19 @@
 // Import the USWDS source.
 @import "../node_modules/uswds/src/stylesheets/uswds.scss";
 
-.field--widget-number {
-  .field-prefix {
-    display: none;
-  }
-  label {
-    float: left;
-		width: 50%;
-    margin-top: 1rem;
-  }
-	input {
-    float: right;
-		width: 50%;
-	}
-  :after {
-		content: "";
-		display: table;
-		clear: both;
-  }
+.usa-header {
+  background: $color-blue-darkest;
 }
 
-.field {
-  clear: left;
-  padding: 2rem 0;
+.usa-logo a {
+  color: $color-aqua-lightest;
 }
-.field__label {
+
+.usa-nav-secondary-links a {
+  color: $color-aqua-lightest;
   font-weight: bold;
-  width: 40%;
-  float: left;
-  padding-right: 2rem;
+
+  &:hover {
+    color: $color-aqua-light;
+  }
 }
-// .field__item {
-//   width: 60%;
-//   float: left;
-// }
