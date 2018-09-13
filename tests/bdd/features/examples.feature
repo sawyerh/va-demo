@@ -21,7 +21,7 @@ Feature: Page Loading
 
   @api
    Scenario: Load page as authenticated user
-     Given I am logged in as a user with the "administratror" role
+     Given I am logged in as a user with the "administrator" role
      And I am on "/"
      Then the response status code should be 200
 

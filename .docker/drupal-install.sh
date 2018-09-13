@@ -9,8 +9,8 @@ $DRUSH -y site:install minimal --account-pass=teamagile6 --sites-subdir=default 
 echo "Importing Configuration"
 $DRUSH -y config-import
 
-echo "Adding Administratror (sic) role and user"
-$DRUSH user:role:add administratror va.gov-modernization
+echo "Adding Administrator role and user"
+$DRUSH user:role:add administrator va.gov-modernization
 
 echo "Adding Content Creator role and user"
 $DRUSH user:role:add content_creator Mary.Creator

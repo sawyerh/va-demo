@@ -12,9 +12,9 @@ Feature: Basic Page Content Type Settings and Access
       | content_creator	        | create     |
       | content_creator	        | edit own   |
       | content_creator	        | edit any   |
-      | administratror	        | create     |
-      | administratror	        | edit own   |
-      | administratror	        | edit any   |
+      | administrator	        | create     |
+      | administrator	        | edit own   |
+      | administrator	        | edit any   |
       | editor	                | create     |
       | editor	                | edit own   |
       | editor	                | edit any   |
