@@ -63,7 +63,7 @@
                 },
                 "uuid": [
                     {
-                        "value": "00ada927-1cd4-47f7-adfe-f01211ce1771"
+                        "value": "78be6339-25b2-42dc-bcb1-6c4eacb4a4c8"
                     }
                 ]
             }
@@ -80,7 +80,7 @@
                 },
                 "uuid": [
                     {
-                        "value": "00ada927-1cd4-47f7-adfe-f01211ce1771"
+                        "value": "78be6339-25b2-42dc-bcb1-6c4eacb4a4c8"
                     }
                 ],
                 "lang": "en"
@@ -89,7 +89,7 @@
     },
     "status": [
         {
-            "value": true,
+            "value": false,
             "lang": "en"
         }
     ],
@@ -139,7 +139,7 @@
     ],
     "moderation_state": [
         {
-            "value": "published",
+            "value": "draft",
             "lang": "en"
         }
     ],
