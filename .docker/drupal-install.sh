@@ -12,10 +12,13 @@ $DRUSH -y config-import
 echo "Adding Administrator role and user"
 $DRUSH user:role:add administrator va.gov-modernization
 
+echo "Adding Publisher role and user"
+$DRUSH user:role:add publisher Chris.Publisher
+
 echo "Adding Content Creator role and user"
 $DRUSH user:role:add content_creator Mary.Creator
 
-echo "Adding Editor role and user"
+echo "Adding Reviewer role and user"
 $DRUSH user:role:add editor Mei.Editor
 
 echo "Unblocking and setting e-mail addresses for demo users"
